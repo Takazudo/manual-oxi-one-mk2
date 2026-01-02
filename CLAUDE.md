@@ -90,26 +90,117 @@ gh pr merge <PR_NUMBER> --squash
 
 We use git worktrees under the `worktrees/{tree-name}/` directory for topic-based development.
 
-### 🚨 CRITICAL WARNING: NEVER Edit Files in Worktree Directories
+### 🚨 CRITICAL WARNING: Always Check Your Current Directory Before Git Operations
 
-**ABSOLUTE RULE: Do NOT perform any git operations (commit, push, checkout, etc.) inside `/worktrees/` directory.**
+**MANDATORY CHECK BEFORE ANY GIT OPERATION:**
 
-- **Location**: All git worktrees are under `/worktrees/` directory
-- **Each worktree = Different branch**: Files under `/worktrees/` are checked out to DIFFERENT branches than the main repo
-- **Git operations apply to that branch**: Any git commit/push in a worktree affects THAT branch, not your intended branch
-- **Hard to debug**: Changes made in worktrees can break things unexpectedly and are very hard to trace
+```bash
+# ALWAYS run this before ANY git operation (commit, push, checkout, branch, etc.)
+pwd
+```
 
-**When user says "refer to old implementation in git worktree":**
+**If the output contains `/worktrees/`:**
+- ❌ **STOP! You are in a git worktree!**
+- ❌ **Any git operation will affect the WORKTREE BRANCH, not main!**
+- ✅ **Navigate back to repo root first:** `cd /Users/takazudo/repos/personal/manual-oxi-one-mk2`
 
-- ✅ **DO**: Read files from worktree for reference (using Read tool)
-- ❌ **DON'T**: Edit, commit, or push any changes there
-- ✅ **DO**: Copy the implementation to the main repo and apply changes there
+### 🔴 Two Different Session Contexts
 
-**How to detect you're in a worktree:**
+#### Context 1: Root Session (Manager Role)
+**Started from:** `/Users/takazudo/repos/personal/manual-oxi-one-mk2/` (repo root)
+**Purpose:** Manage project, review work, merge PRs
+**Git operations:** Affect `main` branch
+**RULE:** Never cd into `/worktrees/{slug}/` and do git operations
 
-- Check if current path contains `/worktrees/`
-- Run `pwd` - if it shows `/Users/takazudo/repos/personal/manual-oxi-one-mk2/worktrees/*`, you're in a worktree
-- **If you're in a worktree, navigate back to repo root before any git operations**
+#### Context 2: Worktree Session (Worker Role)
+**Started from:** `/Users/takazudo/repos/personal/manual-oxi-one-mk2/worktrees/{slug}/`
+**Purpose:** Work on specific issue/task
+**Git operations:** Affect the worktree's feature branch (e.g., `issue-3--docusaurus-...`)
+**RULE:** All work happens here, commits go to feature branch
+
+### 🚨 CRITICAL WARNING: NEVER Mix Contexts
+
+**If you started in ROOT (manager session):**
+- ❌ **NEVER** cd into `/worktrees/{slug}/` and do git operations
+- ✅ **DO** read files from worktrees for reference
+- ✅ **DO** review PRs, merge branches, manage the project
+
+**If you started in WORKTREE (worker session):**
+- ✅ All your work happens here
+- ✅ Commits and pushes go to the feature branch
+- ✅ When done, create PR to merge into main
+
+### Common Mistake Example
+
+```bash
+# ❌ WRONG - This is a disaster waiting to happen:
+# (Started session in repo root)
+pwd                           # /Users/.../manual-oxi-one-mk2
+cd worktrees/issue-3-docusaurus/
+git add .
+git commit -m "fix"          # ❌ Commits to issue-3 branch, NOT main!
+git push                     # ❌ Pushes to wrong branch!
+
+# ✅ CORRECT - Always check where you are:
+pwd                           # /Users/.../manual-oxi-one-mk2
+# If you need to work on issue-3, start a NEW session in that worktree
+# Don't cd there from root session!
+```
+
+### How to Detect You're in a Worktree
+
+**Method 1: Check current path**
+```bash
+pwd
+# If output contains '/worktrees/', you're in a worktree
+```
+
+**Method 2: Check git branch**
+```bash
+git branch --show-current
+# If it shows 'issue-X--something', you're likely in a worktree
+# If it shows 'main', you're in the main repo
+```
+
+**Method 3: Check worktree list**
+```bash
+git worktree list
+# Shows all active worktrees and their branches
+```
+
+### 🛑 BEFORE ANY GIT COMMAND: Checklist
+
+Before running ANY of these commands:
+- `git add`
+- `git commit`
+- `git push`
+- `git checkout`
+- `git branch`
+- `git merge`
+
+**RUN THIS FIRST:**
+```bash
+pwd
+# Confirm you're in the correct location!
+# Repo root: /Users/takazudo/repos/personal/manual-oxi-one-mk2
+# Worktree: /Users/takazudo/repos/personal/manual-oxi-one-mk2/worktrees/{slug}
+```
+
+**Then ask yourself:**
+- "Am I in the right context for this operation?"
+- "Is this what I intend to do?"
+- "Will this affect the correct branch?"
+
+### What Happens When You Make a Mistake
+
+**Scenario:** You started in root, cd'd to worktree, and committed
+- ✅ The commit goes to the worktree's feature branch
+- ❌ The commit does NOT go to main
+- ❌ You might have committed to the wrong issue's branch
+- ❌ Very hard to debug and fix
+- ❌ Wastes time and causes confusion
+
+**Prevention:** ALWAYS check `pwd` before git operations!
 
 ### init-worktree Command
 
