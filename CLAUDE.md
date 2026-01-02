@@ -8,6 +8,15 @@ This is a Next.js-based manual viewer for the OXI ONE MKII hardware synthesizer 
 
 **Project Goal**: Create a web-based manual viewer that displays PDF page images alongside Japanese translations in a user-friendly, searchable interface.
 
+**Deployed Website**: https://manual-oxi-one-mk2.netlify.app/
+
+- This is the live production website that corresponds to the content in this repository
+- When referencing URLs like https://manual-oxi-one-mk2.netlify.app/*, the content exists in this repository
+- The deployed site reflects the current state of the main branch
+- We may use URLs like `https://68c5b21d5e874f6f7be1cb1a--manual-oxi-one-mk2.netlify.app`
+- This `https://*--manual-oxi-one-mk2.netlify.app` is the preview deployed host by Netlify
+- We use preview URLs for previewing PRs before merging to main
+
 ## Security Notes
 
 - **NEVER use `rm -rf` with absolute paths** - Always use relative paths like `rm -rf ./foo/bar`
@@ -22,13 +31,23 @@ The `__inbox/` directory serves as a temporary stash for:
 - Translation work-in-progress files
 - Screenshots and test outputs
 - Any generated reports that shouldn't be committed to Git
+- Error reports from processing
+- Temporary analysis files
 
 **Key points:**
 
 - This directory is in `.gitignore` - files here won't be committed
 - Safe place for temporary work files and reports
 - **ALWAYS use `__inbox/` for temporary files** - Do NOT save temporary files (screenshots, test outputs, etc.) to the repository root
+- Processing errors are saved here with timestamps
 - Claude can freely create temporary files here for analysis
+
+Example files saved here:
+
+- `translation-errors-YYYY-MM-DD-HH-mm-ss.json` - Error reports from translation processing
+- `test-screenshot.png` - Temporary test screenshots
+- Analysis reports and temporary documentation
+- Any other temporary files needed during development
 
 ## Directory Structure
 
@@ -202,6 +221,39 @@ pwd
 
 **Prevention:** ALWAYS check `pwd` before git operations!
 
+### ⚠️ CRITICAL: Always Pull Before Creating Worktree
+
+**MANDATORY**: Pull the latest base branch before creating a worktree to ensure it includes all merged changes.
+
+```bash
+# ✅ CORRECT - Pull first, then create worktree
+git checkout main
+git pull origin main
+pnpm run init-worktree issue-3-docusaurus
+
+# ❌ WRONG - Creating worktree from stale local branch
+pnpm run init-worktree issue-3-docusaurus  # Missing merged PRs!
+```
+
+**Why this matters:**
+- Worktrees created from stale branches are missing merged PRs
+- Implementation sessions fail due to missing dependencies
+- Wasted time reimplementing code that already exists
+- Confusion about what files should exist
+
+**Example of what goes wrong:**
+1. PR #14 merged to remote `main` ✅
+2. Local `main` not updated ❌
+3. Worktree created from stale local branch ❌
+4. Worktree missing all PR #14 files ❌
+5. Implementation fails ❌
+
+**Always follow this sequence:**
+1. Merge any pending PRs
+2. Pull latest base branch
+3. Create worktree
+4. Verify worktree has expected files
+
 ### init-worktree Command
 
 We have an `init-worktree` command that will set up a git worktree automatically.
@@ -241,6 +293,31 @@ pnpm run init-worktree issue-2-project-setup
 pnpm run init-worktree issue-2-project-setup  # Missing merged PRs!
 ```
 
+## Localhost Port Mapping for Development
+
+This port mapping is crucial for human-to-AI communication. When users reference localhost URLs (e.g., "check http://localhost:3000/"), use this mapping to understand which service and files are being referenced.
+
+### Port Assignment Table
+
+| Port | Service          | Directory       | Purpose                     | Start Command    |
+| ---- | ---------------- | --------------- | --------------------------- | ---------------- |
+| 3000 | Next.js App      | `/manuals/`     | Manual viewer app           | `pnpm dev`       |
+| 3001 | Docusaurus Docs  | `/manuals/doc/` | Technical documentation     | `pnpm doc:dev`   |
+| 8030 | Production Build | `/manuals/out/` | Production build test serve | `pnpm serve`     |
+
+### URL to File Mapping Examples
+
+- `http://localhost:3000/` → Next.js app in `/manuals/app/`
+- `http://localhost:3000/part-01/page/1` → Manual page viewer
+- `http://localhost:3001/docs/inbox/` → Documentation in `/manuals/doc/docs/inbox/`
+
+### Port Management
+
+**Automatic port cleanup:**
+
+- Use `lsof -ti:[PORT] | xargs kill -9` for manual cleanup if needed
+- Example: `lsof -ti:3000 | xargs kill -9`
+
 ## Development Commands
 
 ```bash
@@ -256,6 +333,9 @@ pnpm build
 # Build documentation
 pnpm doc:build
 
+# Serve production build locally
+pnpm serve
+
 # Type checking
 pnpm typecheck
 
@@ -270,6 +350,9 @@ pnpm format:fix
 # Run all checks before committing
 pnpm check
 pnpm check:fix
+
+# Clean build outputs
+pnpm clean
 ```
 
 ## Package Manager
