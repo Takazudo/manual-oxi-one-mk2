@@ -389,7 +389,7 @@ pnpm clean
 
 **Claude Code Skill:** `/pdf-process`
 
-Automated workflow for converting the OXI ONE MKII PDF manual into Next.js application data. See `scripts/README-PDF-PROCESSING.md` for full documentation.
+Automated workflow for converting the OXI ONE MKII PDF manual into Next.js application data using Claude Code Task subagents.
 
 ### ⚠️ Important: Maintain the System, Not the Output
 
@@ -397,7 +397,7 @@ Automated workflow for converting the OXI ONE MKII PDF manual into Next.js appli
 
 ✅ **Maintain:**
 
-- Subagent definitions (`.claude/agents/manual-translator.md`)
+- Translator prompt (`.claude/agents/manual-translator.md`)
 - Processing scripts (`scripts/pdf-*.js`)
 - Command documentation (`.claude/commands/pdf-process.md`)
 - Pipeline configuration (`pdf-config.json`)
@@ -410,7 +410,7 @@ Automated workflow for converting the OXI ONE MKII PDF manual into Next.js appli
 - `public/manual/pages/` - Rendered images
 - `manual-pdf/parts/` - Split PDF files
 
-**When improving translation quality:** Update the subagent prompt and scripts, then regenerate outputs by running the pipeline again. The outputs are disposable - the process is what matters.
+**When improving translation quality:** Update the translator prompt in `.claude/agents/manual-translator.md`, then regenerate outputs by running the pipeline again. The outputs are disposable - the process is what matters.
 
 ### Quick Start
 
@@ -418,23 +418,24 @@ Automated workflow for converting the OXI ONE MKII PDF manual into Next.js appli
 # 1. Place PDF in manual-pdf directory
 cp /path/to/OXI-ONE-MKII-Manual.pdf manual-pdf/
 
-# 2. Run full pipeline
-pnpm run pdf:all
-
-# OR use Claude Code slash commands
-# Type: /pdf-process all
+# 2. Run full pipeline via Claude Code
+# Type: /pdf-process
 ```
+
+**Claude Code will execute the pipeline without asking questions during translation.**
 
 ### Pipeline Overview
 
-The PDF processing pipeline consists of 6 steps:
+The PDF processing pipeline consists of 6 fully automated steps:
 
-1. **Split** - Divides the PDF into 10 parts (30 pages each)
+1. **Split** - Divides the PDF into parts (30 pages each)
 2. **Render** - Converts pages to PNG images at 150 DPI
 3. **Extract** - Extracts text from each PDF part
-4. **Translate** - Translates text to Japanese using Claude API
+4. **Translate** - Translates to Japanese using Claude Code Task subagents (5 concurrent workers)
 5. **Build** - Combines data into JSON files for Next.js
 6. **Manifest** - Creates manifest.json with metadata
+
+**Total time:** ~15-30 minutes for a 280-page manual
 
 ### Output Structure
 
