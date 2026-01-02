@@ -93,14 +93,20 @@ Avoid Tailwind's default numeric classes - these are **not** design system token
 
 ### Configuration Files
 
-1. **`/src/styles/global.css`** - Contains all design system definitions:
+1. **`/app/globals.css`** - Contains all design system definitions:
+
 - `:root` variables - Zudo Design System token definitions (--zd-\*)
 - `@theme` block - Maps Zudo tokens to Tailwind theme variables (disables Tailwind defaults by only defining custom tokens)
 
-2. **`/tailwind.config.js`** - Minimal configuration:
+2. **`/tailwind.config.cjs`** - Minimal configuration:
+
 - Content paths for Tailwind to scan
 - Custom plugins only
-- NO theme configuration (moved to global.css)
+- NO theme configuration (moved to globals.css)
+
+3. **`/postcss.config.cjs`** - PostCSS configuration:
+
+- Tailwind CSS v4 PostCSS plugin only
 
 ### How It Works
 
@@ -218,29 +224,29 @@ When the design requires a specific value that doesn't match the vgap/hgap scale
 
 #### Horizontal Gaps (hgap)
 
-| Class | Value | Use Case |
-|-------|-------|----------|
-| `hgap-2xs` | 5px | Minimal horizontal spacing |
-| `hgap-xs` | 12px | Small gaps between elements |
-| `hgap-sm` | 20px | Default padding/margins |
-| `hgap-md` | 40px | Section spacing |
-| `hgap-md-x2` | 80px | Large section spacing |
-| `hgap-lg` | 60px | Major layout divisions |
-| `hgap-lg-x2` | 120px | Extra large divisions |
-| `hgap-xl` | 100px | Page margins |
-| `hgap-2xl` | 250px | Maximum spacing |
+| Class        | Value | Use Case                    |
+| ------------ | ----- | --------------------------- |
+| `hgap-2xs`   | 5px   | Minimal horizontal spacing  |
+| `hgap-xs`    | 12px  | Small gaps between elements |
+| `hgap-sm`    | 20px  | Default padding/margins     |
+| `hgap-md`    | 40px  | Section spacing             |
+| `hgap-md-x2` | 80px  | Large section spacing       |
+| `hgap-lg`    | 60px  | Major layout divisions      |
+| `hgap-lg-x2` | 120px | Extra large divisions       |
+| `hgap-xl`    | 100px | Page margins                |
+| `hgap-2xl`   | 250px | Maximum spacing             |
 
 #### Vertical Gaps (vgap)
 
-| Class | Value | Use Case |
-|-------|-------|----------|
-| `vgap-2xs` | 4px | Minimal vertical spacing |
-| `vgap-xs` | 8px | Tight vertical spacing |
-| `vgap-sm` | 20px | Default vertical gaps |
-| `vgap-md` | 35px | Section spacing |
-| `vgap-lg` | 50px | Major sections |
-| `vgap-xl` | 65px | Large vertical spacing |
-| `vgap-2xl` | 80px | Maximum vertical spacing |
+| Class      | Value | Use Case                 |
+| ---------- | ----- | ------------------------ |
+| `vgap-2xs` | 4px   | Minimal vertical spacing |
+| `vgap-xs`  | 8px   | Tight vertical spacing   |
+| `vgap-sm`  | 20px  | Default vertical gaps    |
+| `vgap-md`  | 35px  | Section spacing          |
+| `vgap-lg`  | 50px  | Major sections           |
+| `vgap-xl`  | 65px  | Large vertical spacing   |
+| `vgap-2xl` | 80px  | Maximum vertical spacing |
 
 ### Common Patterns
 
@@ -276,29 +282,33 @@ The Zudo Design System includes a custom color palette defined as CSS variables:
 /* Colors */
 --zd-color-black: rgb(28, 25, 23);
 --zd-color-white: rgb(214, 211, 209);
---zd-color-link: #d97706;
+--zd-color-link: #fff; /* White with text-shadow for visibility */
 --zd-color-active: #713f12;
 --zd-color-gray: rgb(120, 113, 108);
 --zd-color-gray2: #201f1f;
+--zd-color-strong: #d97706; /* Orange/amber for strong text emphasis */
 --zd-color-notify: #22c55e;
 --zd-color-error: #f43f5e;
 --zd-color-debug: #ff0000;
 --zd-color-price: #fbbf24;
+--zd-color-outline: #ea580c; /* Focus/active outlines */
 ```
 
 ### Color Usage
 
-| Color | Class | Use Case |
-|-------|-------|----------|
-| Black | `bg-zd-black`, `text-zd-black` | Backgrounds, primary text |
-| White | `bg-zd-white`, `text-zd-white` | Light backgrounds, body text |
-| Gray | `bg-zd-gray`, `text-zd-gray` | Secondary elements |
-| Gray2 | `bg-zd-gray2` | Dark backgrounds |
-| Link | `text-zd-link` | Links, CTAs |
-| Active | `bg-zd-active` | Active/pressed states |
-| Notify | `text-zd-notify` | Success messages |
-| Error | `text-zd-error` | Error messages |
-| Price | `text-zd-price` | Price displays |
+| Color   | Class                          | Use Case                       |
+| ------- | ------------------------------ | ------------------------------ |
+| Black   | `bg-zd-black`, `text-zd-black` | Backgrounds, primary text      |
+| White   | `bg-zd-white`, `text-zd-white` | Light backgrounds, body text   |
+| Gray    | `bg-zd-gray`, `text-zd-gray`   | Secondary elements             |
+| Gray2   | `bg-zd-gray2`                  | Dark backgrounds               |
+| Link    | `text-zd-link`                 | Links (white with text-shadow) |
+| Strong  | `text-zd-strong`               | Strong text emphasis           |
+| Active  | `bg-zd-active`                 | Active/pressed states          |
+| Notify  | `text-zd-notify`               | Success messages               |
+| Error   | `text-zd-error`                | Error messages                 |
+| Price   | `text-zd-price`                | Price displays                 |
+| Outline | `outline-zd-outline`           | Focus/active outlines          |
 
 ## Typography
 
@@ -308,23 +318,23 @@ The project uses a combined font-size and line-height system for consistent typo
 
 ```css
 /* Font size / line height combinations */
---zd-font-xs-size: 1rem;           /* 10px */
+--zd-font-xs-size: 1rem; /* 10px */
 --zd-font-xs-lineHeight: 1.4;
---zd-font-sm-size: 1.1rem;         /* 11px */
+--zd-font-sm-size: 1.1rem; /* 11px */
 --zd-font-sm-lineHeight: 1.5;
---zd-font-base-size: 1.4rem;       /* 14px */
+--zd-font-base-size: 1.4rem; /* 14px */
 --zd-font-base-lineHeight: 1.7;
---zd-font-lg-size: 1.6rem;         /* 16px */
+--zd-font-lg-size: 1.6rem; /* 16px */
 --zd-font-lg-lineHeight: 1.5;
---zd-font-xl-size: 1.9rem;         /* 19px */
+--zd-font-xl-size: 1.9rem; /* 19px */
 --zd-font-xl-lineHeight: 1.4;
---zd-font-2xl-size: 2.8rem;        /* 28px */
+--zd-font-2xl-size: 2.8rem; /* 28px */
 --zd-font-2xl-lineHeight: 1.35;
---zd-font-3xl-size: 3.2rem;        /* 32px */
+--zd-font-3xl-size: 3.2rem; /* 32px */
 --zd-font-3xl-lineHeight: 1.3;
---zd-font-4xl-size: 4rem;          /* 40px */
+--zd-font-4xl-size: 4rem; /* 40px */
 --zd-font-4xl-lineHeight: 1.3;
---zd-font-5xl-size: 4.8rem;        /* 48px */
+--zd-font-5xl-size: 4.8rem; /* 48px */
 --zd-font-5xl-lineHeight: 1.3;
 ```
 
@@ -484,9 +494,7 @@ Due to wildcard resets in the `@theme` block, the following Tailwind default uti
 
 ```jsx
 // ❌ This code will FAIL to build:
-<div className="px-4 bg-gray-500 text-sm">
-  Content
-</div>
+<div className="px-4 bg-gray-500 text-sm">Content</div>
 
 // Error: The utility `px-4` does not exist in your theme.
 // Error: The utility `bg-gray-500` does not exist in your theme.
@@ -531,6 +539,7 @@ This strict enforcement ensures design consistency across the entire application
 4. Only custom tokens are available - Tailwind defaults are completely removed
 
 **Key Syntax:**
+
 ```css
 @theme {
   /* STEP 1: Reset all Tailwind defaults using wildcard patterns */
@@ -561,5 +570,6 @@ This strict enforcement ensures design consistency across the entire application
 
 ## Related Files
 
-- **All design system configuration**: `/src/styles/global.css`
-- **Minimal Tailwind config**: `/tailwind.config.js` (content paths only)
+- **All design system configuration**: `/app/globals.css`
+- **Minimal Tailwind config**: `/tailwind.config.cjs` (content paths only)
+- **PostCSS config**: `/postcss.config.cjs` (Tailwind CSS v4 plugin)
