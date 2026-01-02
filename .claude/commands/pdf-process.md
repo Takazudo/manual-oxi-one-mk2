@@ -67,6 +67,8 @@ These steps can be run directly using pnpm:
 
 **CRITICAL:** Full parts (30 pages) are too large for a single subagent - output gets truncated! Must use chunking.
 
+**CRITICAL: Context Management** - Run `/compact` after every 10 completed pages to prevent context exhaustion during long translation jobs. This is essential for processing all 30 pages without running out of context.
+
 #### Translation Process (Worker Pool Pattern):
 
 For each part file (e.g., `part-01.txt`):
@@ -115,6 +117,7 @@ for (let i = 0; i < MAX_WORKERS && pageQueue.length > 0; i++) {
 }
 
 // Continuous polling until all pages are translated
+let completedCount = 0;
 while (workers.some(w => w !== null) || pageQueue.length > 0) {
   for (let i = 0; i < MAX_WORKERS; i++) {
     if (!workers[i]) continue;
@@ -125,6 +128,14 @@ while (workers.some(w => w !== null) || pageQueue.length > 0) {
     if (result.completed) {
       // Save translation
       results[workers[i].pageNum] = result.output;
+      completedCount++;
+
+      // IMPORTANT: Run /compact after every 10 pages to prevent context exhaustion
+      if (completedCount % 10 === 0) {
+        // Run /compact to compress conversation history
+        // This is critical for long-running translation jobs (30 pages)
+        await runCompact();
+      }
 
       // Assign next page or mark worker as done
       if (pageQueue.length > 0) {
