@@ -2,7 +2,9 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useMemo } from 'react';
 import ctl from '@netlify/classnames-template-literals';
+import { getNavigationState } from '@/lib/manual-data';
 
 const navContainerStyles = ctl(`
   flex items-center justify-between gap-hgap-sm
@@ -47,19 +49,25 @@ export function PageNavigation({ currentPage, totalPages }: PageNavigationProps)
     router.push(`/page/${page}`);
   };
 
-  const hasPrev = currentPage > 1;
-  const hasNext = currentPage < totalPages;
+  const { canGoToPrev, canGoToNext } = getNavigationState(currentPage, totalPages);
+
+  // Memoize page options array to avoid recreating on every render
+  const pageOptions = useMemo(
+    () => Array.from({ length: totalPages }, (_, i) => i + 1),
+    [totalPages],
+  );
 
   return (
     <nav className={navContainerStyles}>
-      <Link
-        href={`/page/${currentPage - 1}`}
-        className={buttonStyles}
-        aria-disabled={!hasPrev}
-        style={{ pointerEvents: hasPrev ? 'auto' : 'none' }}
-      >
-        ← 前へ
-      </Link>
+      {canGoToPrev ? (
+        <Link href={`/page/${currentPage - 1}`} className={buttonStyles}>
+          ← 前へ
+        </Link>
+      ) : (
+        <span className={`${buttonStyles} opacity-50 cursor-not-allowed`} aria-disabled="true">
+          ← 前へ
+        </span>
+      )}
 
       <div className={pageInfoStyles}>
         <span>ページ</span>
@@ -69,7 +77,7 @@ export function PageNavigation({ currentPage, totalPages }: PageNavigationProps)
           className={selectStyles}
           aria-label="ページを選択"
         >
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+          {pageOptions.map((page) => (
             <option key={page} value={page}>
               {page}
             </option>
@@ -78,14 +86,15 @@ export function PageNavigation({ currentPage, totalPages }: PageNavigationProps)
         <span>/ {totalPages}</span>
       </div>
 
-      <Link
-        href={`/page/${currentPage + 1}`}
-        className={buttonStyles}
-        aria-disabled={!hasNext}
-        style={{ pointerEvents: hasNext ? 'auto' : 'none' }}
-      >
-        次へ →
-      </Link>
+      {canGoToNext ? (
+        <Link href={`/page/${currentPage + 1}`} className={buttonStyles}>
+          次へ →
+        </Link>
+      ) : (
+        <span className={`${buttonStyles} opacity-50 cursor-not-allowed`} aria-disabled="true">
+          次へ →
+        </span>
+      )}
     </nav>
   );
 }

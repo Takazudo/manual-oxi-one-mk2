@@ -26,7 +26,15 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps) {
   const resolvedParams = await params;
-  const pageNum = parseInt(resolvedParams.pageNum);
+  const pageNum = Number(resolvedParams.pageNum);
+
+  // Validate page number is a positive integer
+  if (!Number.isInteger(pageNum) || pageNum < 1) {
+    return {
+      title: 'Page Not Found - OXI ONE MKII Manual',
+    };
+  }
+
   const page = getManualPage(pageNum);
 
   if (!page) {
@@ -43,10 +51,10 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function Page({ params }: PageProps) {
   const resolvedParams = await params;
-  const pageNum = parseInt(resolvedParams.pageNum);
+  const pageNum = Number(resolvedParams.pageNum);
 
-  // Validate page number
-  if (isNaN(pageNum) || !pageExists(pageNum)) {
+  // Validate page number is a positive integer
+  if (!Number.isInteger(pageNum) || pageNum < 1 || !pageExists(pageNum)) {
     notFound();
   }
 

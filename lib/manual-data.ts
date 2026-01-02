@@ -69,30 +69,31 @@ export function getManualPage(pageNum: number): ManualPage | null {
 
 /**
  * Get total pages in the manual
+ * Derived from the maximum page range in the manifest
  */
 export function getTotalPages(): number {
   const manifest = getManifest();
-  return manifest.totalPages;
+  // Calculate total pages from actual part ranges
+  if (manifest.parts.length === 0) {
+    return 0;
+  }
+  return Math.max(...manifest.parts.map((part) => part.pageRange[1]));
 }
 
 /**
  * Check if a page exists
  */
 export function pageExists(pageNum: number): boolean {
-  const manifest = getManifest();
-  return pageNum >= 1 && pageNum <= manifest.totalPages;
+  const totalPages = getTotalPages();
+  return pageNum >= 1 && pageNum <= totalPages;
 }
 
 /**
- * Get navigation info for a page
+ * Get navigation capabilities for a given page
  */
-export function getPageNavigation(pageNum: number) {
-  const manifest = getManifest();
+export function getNavigationState(currentPage: number, totalPages: number) {
   return {
-    hasPrev: pageNum > 1,
-    hasNext: pageNum < manifest.totalPages,
-    prevPage: pageNum - 1,
-    nextPage: pageNum + 1,
-    totalPages: manifest.totalPages,
+    canGoToPrev: currentPage > 1,
+    canGoToNext: currentPage < totalPages,
   };
 }

@@ -7,16 +7,6 @@ export interface ManualPage {
   hasContent: boolean;
 }
 
-export interface ManualSection {
-  name: string;
-  pageRange: [number, number];
-}
-
-export interface ManualMetadata {
-  title: string;
-  sections: ManualSection[];
-}
-
 export interface ManualPart {
   part: string;
   pageRange: [number, number];
