@@ -117,6 +117,7 @@ pwd
 ```
 
 **If the output contains `/worktrees/`:**
+
 - ❌ **STOP! You are in a git worktree!**
 - ❌ **Any git operation will affect the WORKTREE BRANCH, not main!**
 - ✅ **Navigate back to repo root first:** `cd /Users/takazudo/repos/personal/manual-oxi-one-mk2`
@@ -124,12 +125,14 @@ pwd
 ### 🔴 Two Different Session Contexts
 
 #### Context 1: Root Session (Manager Role)
+
 **Started from:** `/Users/takazudo/repos/personal/manual-oxi-one-mk2/` (repo root)
 **Purpose:** Manage project, review work, merge PRs
 **Git operations:** Affect `main` branch
 **RULE:** Never cd into `/worktrees/{slug}/` and do git operations
 
 #### Context 2: Worktree Session (Worker Role)
+
 **Started from:** `/Users/takazudo/repos/personal/manual-oxi-one-mk2/worktrees/{slug}/`
 **Purpose:** Work on specific issue/task
 **Git operations:** Affect the worktree's feature branch (e.g., `issue-3--docusaurus-...`)
@@ -138,11 +141,13 @@ pwd
 ### 🚨 CRITICAL WARNING: NEVER Mix Contexts
 
 **If you started in ROOT (manager session):**
+
 - ❌ **NEVER** cd into `/worktrees/{slug}/` and do git operations
 - ✅ **DO** read files from worktrees for reference
 - ✅ **DO** review PRs, merge branches, manage the project
 
 **If you started in WORKTREE (worker session):**
+
 - ✅ All your work happens here
 - ✅ Commits and pushes go to the feature branch
 - ✅ When done, create PR to merge into main
@@ -188,6 +193,7 @@ git worktree list
 ### 🛑 BEFORE ANY GIT COMMAND: Checklist
 
 Before running ANY of these commands:
+
 - `git add`
 - `git commit`
 - `git push`
@@ -204,6 +210,7 @@ pwd
 ```
 
 **Then ask yourself:**
+
 - "Am I in the right context for this operation?"
 - "Is this what I intend to do?"
 - "Will this affect the correct branch?"
@@ -211,6 +218,7 @@ pwd
 ### What Happens When You Make a Mistake
 
 **Scenario:** You started in root, cd'd to worktree, and committed
+
 - ✅ The commit goes to the worktree's feature branch
 - ❌ The commit does NOT go to main
 - ❌ You might have committed to the wrong issue's branch
@@ -234,12 +242,14 @@ pnpm run init-worktree issue-3-docusaurus  # Missing merged PRs!
 ```
 
 **Why this matters:**
+
 - Worktrees created from stale branches are missing merged PRs
 - Implementation sessions fail due to missing dependencies
 - Wasted time reimplementing code that already exists
 - Confusion about what files should exist
 
 **Example of what goes wrong:**
+
 1. PR #14 merged to remote `main` ✅
 2. Local `main` not updated ❌
 3. Worktree created from stale local branch ❌
@@ -247,6 +257,7 @@ pnpm run init-worktree issue-3-docusaurus  # Missing merged PRs!
 5. Implementation fails ❌
 
 **Always follow this sequence:**
+
 1. Merge any pending PRs
 2. Pull latest base branch
 3. Create worktree
@@ -334,6 +345,15 @@ pnpm doc:build
 # Serve production build locally
 pnpm serve
 
+# PDF Processing (Issue #21)
+pnpm run pdf:split       # Split PDF into parts
+pnpm run pdf:render      # Render pages to PNG images
+pnpm run pdf:extract     # Extract text from PDFs
+pnpm run pdf:translate   # Translate to Japanese (requires ANTHROPIC_API_KEY)
+pnpm run pdf:build       # Build final JSON files
+pnpm run pdf:manifest    # Create manifest.json
+pnpm run pdf:all         # Run all PDF processing steps
+
 # Type checking
 pnpm typecheck
 
@@ -352,6 +372,76 @@ pnpm check:fix
 # Clean build outputs
 pnpm clean
 ```
+
+## PDF Processing Automation
+
+**Claude Code Skill:** `/apply-pdf-to-app`
+
+Automated workflow for converting the OXI ONE MKII PDF manual into Next.js application data. See `scripts/README-PDF-PROCESSING.md` for full documentation.
+
+### Quick Start
+
+```bash
+# 1. Set API key (required for translation)
+export ANTHROPIC_API_KEY=sk-ant-...
+
+# 2. Place PDF in manual-pdf directory
+cp /path/to/OXI-ONE-MKII-Manual.pdf manual-pdf/
+
+# 3. Run full pipeline
+pnpm run pdf:all
+
+# OR use the Claude Code skill
+# Type: /apply-pdf-to-app
+```
+
+### Pipeline Overview
+
+The PDF processing pipeline consists of 6 steps:
+
+1. **Split** - Divides the PDF into 10 parts (30 pages each)
+2. **Render** - Converts pages to PNG images at 150 DPI
+3. **Extract** - Extracts text from each PDF part
+4. **Translate** - Translates text to Japanese using Claude API
+5. **Build** - Combines data into JSON files for Next.js
+6. **Manifest** - Creates manifest.json with metadata
+
+### Output Structure
+
+```
+manual-pdf/parts/            # Split PDF files
+public/manual/pages/         # Rendered PNG images (150 DPI)
+data/extracted/              # Extracted text (intermediate)
+data/translations-draft/     # Translation drafts (intermediate)
+data/translations/           # Final JSON files (for Next.js)
+  ├── manifest.json
+  ├── part-01.json
+  └── ...
+```
+
+### Configuration
+
+Edit `pdf-config.json` to customize settings:
+
+- Pages per part
+- Image DPI and format
+- Translation model
+- Max retries
+
+### Cost Estimation
+
+Translation using Claude Sonnet 4.5:
+
+- Estimated: $5-10 per full 280-page manual
+- Time: 15-30 minutes total
+
+### Error Handling
+
+- Error reports saved to `__inbox/`
+- Scripts can be resumed from failed step
+- Retry logic for API failures
+
+**Full Documentation:** See `scripts/README-PDF-PROCESSING.md`
 
 ## Package Manager
 
