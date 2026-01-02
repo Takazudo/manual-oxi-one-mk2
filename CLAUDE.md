@@ -8,6 +8,15 @@ This is a Next.js-based manual viewer for the OXI ONE MKII hardware synthesizer 
 
 **Project Goal**: Create a web-based manual viewer that displays PDF page images alongside Japanese translations in a user-friendly, searchable interface.
 
+**Deployed Website**: https://manual-oxi-one-mk2.netlify.app/
+
+- This is the live production website that corresponds to the content in this repository
+- When referencing URLs like https://manual-oxi-one-mk2.netlify.app/*, the content exists in this repository
+- The deployed site reflects the current state of the main branch
+- We may use URLs like `https://68c5b21d5e874f6f7be1cb1a--manual-oxi-one-mk2.netlify.app`
+- This `https://*--manual-oxi-one-mk2.netlify.app` is the preview deployed host by Netlify
+- We use preview URLs for previewing PRs before merging to main
+
 ## Security Notes
 
 - **NEVER use `rm -rf` with absolute paths** - Always use relative paths like `rm -rf ./foo/bar`
@@ -22,13 +31,23 @@ The `__inbox/` directory serves as a temporary stash for:
 - Translation work-in-progress files
 - Screenshots and test outputs
 - Any generated reports that shouldn't be committed to Git
+- Error reports from processing
+- Temporary analysis files
 
 **Key points:**
 
 - This directory is in `.gitignore` - files here won't be committed
 - Safe place for temporary work files and reports
 - **ALWAYS use `__inbox/` for temporary files** - Do NOT save temporary files (screenshots, test outputs, etc.) to the repository root
+- Processing errors are saved here with timestamps
 - Claude can freely create temporary files here for analysis
+
+Example files saved here:
+
+- `translation-errors-YYYY-MM-DD-HH-mm-ss.json` - Error reports from translation processing
+- `test-screenshot.png` - Temporary test screenshots
+- Analysis reports and temporary documentation
+- Any other temporary files needed during development
 
 ## Directory Structure
 
@@ -90,26 +109,150 @@ gh pr merge <PR_NUMBER> --squash
 
 We use git worktrees under the `worktrees/{tree-name}/` directory for topic-based development.
 
-### 🚨 CRITICAL WARNING: NEVER Edit Files in Worktree Directories
+### 🚨 CRITICAL WARNING: Always Check Your Current Directory Before Git Operations
 
-**ABSOLUTE RULE: Do NOT perform any git operations (commit, push, checkout, etc.) inside `/worktrees/` directory.**
+**MANDATORY CHECK BEFORE ANY GIT OPERATION:**
 
-- **Location**: All git worktrees are under `/worktrees/` directory
-- **Each worktree = Different branch**: Files under `/worktrees/` are checked out to DIFFERENT branches than the main repo
-- **Git operations apply to that branch**: Any git commit/push in a worktree affects THAT branch, not your intended branch
-- **Hard to debug**: Changes made in worktrees can break things unexpectedly and are very hard to trace
+```bash
+# ALWAYS run this before ANY git operation (commit, push, checkout, branch, etc.)
+pwd
+```
 
-**When user says "refer to old implementation in git worktree":**
+**If the output contains `/worktrees/`:**
+- ❌ **STOP! You are in a git worktree!**
+- ❌ **Any git operation will affect the WORKTREE BRANCH, not main!**
+- ✅ **Navigate back to repo root first:** `cd /Users/takazudo/repos/personal/manual-oxi-one-mk2`
 
-- ✅ **DO**: Read files from worktree for reference (using Read tool)
-- ❌ **DON'T**: Edit, commit, or push any changes there
-- ✅ **DO**: Copy the implementation to the main repo and apply changes there
+### 🔴 Two Different Session Contexts
 
-**How to detect you're in a worktree:**
+#### Context 1: Root Session (Manager Role)
+**Started from:** `/Users/takazudo/repos/personal/manual-oxi-one-mk2/` (repo root)
+**Purpose:** Manage project, review work, merge PRs
+**Git operations:** Affect `main` branch
+**RULE:** Never cd into `/worktrees/{slug}/` and do git operations
 
-- Check if current path contains `/worktrees/`
-- Run `pwd` - if it shows `/Users/takazudo/repos/personal/manual-oxi-one-mk2/worktrees/*`, you're in a worktree
-- **If you're in a worktree, navigate back to repo root before any git operations**
+#### Context 2: Worktree Session (Worker Role)
+**Started from:** `/Users/takazudo/repos/personal/manual-oxi-one-mk2/worktrees/{slug}/`
+**Purpose:** Work on specific issue/task
+**Git operations:** Affect the worktree's feature branch (e.g., `issue-3--docusaurus-...`)
+**RULE:** All work happens here, commits go to feature branch
+
+### 🚨 CRITICAL WARNING: NEVER Mix Contexts
+
+**If you started in ROOT (manager session):**
+- ❌ **NEVER** cd into `/worktrees/{slug}/` and do git operations
+- ✅ **DO** read files from worktrees for reference
+- ✅ **DO** review PRs, merge branches, manage the project
+
+**If you started in WORKTREE (worker session):**
+- ✅ All your work happens here
+- ✅ Commits and pushes go to the feature branch
+- ✅ When done, create PR to merge into main
+
+### Common Mistake Example
+
+```bash
+# ❌ WRONG - This is a disaster waiting to happen:
+# (Started session in repo root)
+pwd                           # /Users/.../manual-oxi-one-mk2
+cd worktrees/issue-3-docusaurus/
+git add .
+git commit -m "fix"          # ❌ Commits to issue-3 branch, NOT main!
+git push                     # ❌ Pushes to wrong branch!
+
+# ✅ CORRECT - Always check where you are:
+pwd                           # /Users/.../manual-oxi-one-mk2
+# If you need to work on issue-3, start a NEW session in that worktree
+# Don't cd there from root session!
+```
+
+### How to Detect You're in a Worktree
+
+**Method 1: Check current path**
+```bash
+pwd
+# If output contains '/worktrees/', you're in a worktree
+```
+
+**Method 2: Check git branch**
+```bash
+git branch --show-current
+# If it shows 'issue-X--something', you're likely in a worktree
+# If it shows 'main', you're in the main repo
+```
+
+**Method 3: Check worktree list**
+```bash
+git worktree list
+# Shows all active worktrees and their branches
+```
+
+### 🛑 BEFORE ANY GIT COMMAND: Checklist
+
+Before running ANY of these commands:
+- `git add`
+- `git commit`
+- `git push`
+- `git checkout`
+- `git branch`
+- `git merge`
+
+**RUN THIS FIRST:**
+```bash
+pwd
+# Confirm you're in the correct location!
+# Repo root: /Users/takazudo/repos/personal/manual-oxi-one-mk2
+# Worktree: /Users/takazudo/repos/personal/manual-oxi-one-mk2/worktrees/{slug}
+```
+
+**Then ask yourself:**
+- "Am I in the right context for this operation?"
+- "Is this what I intend to do?"
+- "Will this affect the correct branch?"
+
+### What Happens When You Make a Mistake
+
+**Scenario:** You started in root, cd'd to worktree, and committed
+- ✅ The commit goes to the worktree's feature branch
+- ❌ The commit does NOT go to main
+- ❌ You might have committed to the wrong issue's branch
+- ❌ Very hard to debug and fix
+- ❌ Wastes time and causes confusion
+
+**Prevention:** ALWAYS check `pwd` before git operations!
+
+### ⚠️ CRITICAL: Always Pull Before Creating Worktree
+
+**MANDATORY**: Pull the latest base branch before creating a worktree to ensure it includes all merged changes.
+
+```bash
+# ✅ CORRECT - Pull first, then create worktree
+git checkout main
+git pull origin main
+pnpm run init-worktree issue-3-docusaurus
+
+# ❌ WRONG - Creating worktree from stale local branch
+pnpm run init-worktree issue-3-docusaurus  # Missing merged PRs!
+```
+
+**Why this matters:**
+- Worktrees created from stale branches are missing merged PRs
+- Implementation sessions fail due to missing dependencies
+- Wasted time reimplementing code that already exists
+- Confusion about what files should exist
+
+**Example of what goes wrong:**
+1. PR #14 merged to remote `main` ✅
+2. Local `main` not updated ❌
+3. Worktree created from stale local branch ❌
+4. Worktree missing all PR #14 files ❌
+5. Implementation fails ❌
+
+**Always follow this sequence:**
+1. Merge any pending PRs
+2. Pull latest base branch
+3. Create worktree
+4. Verify worktree has expected files
 
 ### init-worktree Command
 
@@ -150,6 +293,31 @@ pnpm run init-worktree issue-2-project-setup
 pnpm run init-worktree issue-2-project-setup  # Missing merged PRs!
 ```
 
+## Localhost Port Mapping for Development
+
+This port mapping is crucial for human-to-AI communication. When users reference localhost URLs (e.g., "check http://localhost:3000/"), use this mapping to understand which service and files are being referenced.
+
+### Port Assignment Table
+
+| Port | Service          | Directory       | Purpose                     | Start Command    |
+| ---- | ---------------- | --------------- | --------------------------- | ---------------- |
+| 3000 | Next.js App      | `/manuals/`     | Manual viewer app           | `pnpm dev`       |
+| 3001 | Docusaurus Docs  | `/manuals/doc/` | Technical documentation     | `pnpm doc:dev`   |
+| 8030 | Production Build | `/manuals/out/` | Production build test serve | `pnpm serve`     |
+
+### URL to File Mapping Examples
+
+- `http://localhost:3000/` → Next.js app in `/manuals/app/`
+- `http://localhost:3000/part-01/page/1` → Manual page viewer
+- `http://localhost:3001/docs/inbox/` → Documentation in `/manuals/doc/docs/inbox/`
+
+### Port Management
+
+**Automatic port cleanup:**
+
+- Use `lsof -ti:[PORT] | xargs kill -9` for manual cleanup if needed
+- Example: `lsof -ti:3000 | xargs kill -9`
+
 ## Development Commands
 
 ```bash
@@ -165,6 +333,9 @@ pnpm build
 # Build documentation
 pnpm doc:build
 
+# Serve production build locally
+pnpm serve
+
 # Type checking
 pnpm typecheck
 
@@ -179,6 +350,9 @@ pnpm format:fix
 # Run all checks before committing
 pnpm check
 pnpm check:fix
+
+# Clean build outputs
+pnpm clean
 ```
 
 ## Package Manager
