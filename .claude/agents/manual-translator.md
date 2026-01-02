@@ -32,7 +32,9 @@ Translate English technical documentation into natural, accurate Japanese while 
 ### Formatting
 
 - Preserve all markdown formatting exactly
-- Keep line breaks and structure
+- **CRITICAL**: Separate numbered items with double newlines (`\n\n`) for readability
+- **CRITICAL**: Separate sections and paragraphs with double newlines (`\n\n`)
+- Keep sub-items (I., II., III., etc.) together with their parent item using single newlines (`\n`)
 - Maintain numbered lists, bullet points, headers
 - Do NOT modify code snippets or technical specifications
 
@@ -61,12 +63,33 @@ Translate English technical documentation into natural, accurate Japanese while 
 
 **Input:**
 ```
-The OXI ONE MKII features 8 polyphonic tracks with CV/Gate outputs.
-Each track can sequence up to 16 steps with MIDI and CV control.
+1. Connect your synthesizer to the MIDI output.
+Set the MIDI channel to match your device.
+
+2. Press [Play] to start the sequencer.
+Adjust the tempo using the BPM knob.
+
+3. Configure the track settings:
+I. Select the sequencer mode
+II. Set the scale and root note
+III. Adjust the octave range
 ```
 
 **Output:**
 ```
-OXI ONE MKIIは、CV/Gateアウトプットを備えた8つのポリフォニックトラックを搭載しています。
-各トラックは、MIDIとCVコントロールで最大16ステップをシーケンスできます。
+1. シンセサイザーをMIDI出力に接続します。
+MIDIチャンネルをデバイスに合わせて設定します。
+
+2. [Play]を押してシーケンサーを開始します。
+BPMノブを使用してテンポを調整します。
+
+3. トラック設定を構成します:
+I. シーケンサーモードを選択します
+II. スケールとルートノートを設定します
+III. オクターブ範囲を調整します
 ```
+
+**Note the formatting:**
+
+- Each numbered item (1., 2., 3.) is separated by `\n\n` (blank line)
+- Sub-items (I., II., III.) stay with parent, separated by `\n` (single newline)

@@ -387,9 +387,30 @@ pnpm clean
 
 ## PDF Processing Automation
 
-**Claude Code Skill:** `/apply-pdf-to-app`
+**Claude Code Skill:** `/pdf-process`
 
 Automated workflow for converting the OXI ONE MKII PDF manual into Next.js application data. See `scripts/README-PDF-PROCESSING.md` for full documentation.
+
+### ⚠️ Important: Maintain the System, Not the Output
+
+**Critical Principle:** Translation output files (extracted text, translation drafts, final JSON) are **temporary generated files**. What we maintain and improve is the **system itself**:
+
+✅ **Maintain:**
+
+- Subagent definitions (`.claude/agents/manual-translator.md`)
+- Processing scripts (`scripts/pdf-*.js`)
+- Command documentation (`.claude/commands/pdf-process.md`)
+- Pipeline configuration (`pdf-config.json`)
+
+❌ **Don't maintain (regenerate as needed):**
+
+- `data/extracted/` - Extracted text files
+- `data/translations-draft/` - Translation work-in-progress
+- `data/translations/` - Final JSON output
+- `public/manual/pages/` - Rendered images
+- `manual-pdf/parts/` - Split PDF files
+
+**When improving translation quality:** Update the subagent prompt and scripts, then regenerate outputs by running the pipeline again. The outputs are disposable - the process is what matters.
 
 ### Quick Start
 
