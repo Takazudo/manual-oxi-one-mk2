@@ -8,20 +8,17 @@ import { withBasePath } from '@/lib/asset-url';
 
 const containerStyles = ctl(`
   flex flex-col lg:flex-row
-  gap-hgap-md
-  h-[calc(100vh-60px)]
+  h-screen
   pt-[60px]
 `);
 
 const columnStyles = ctl(`
   flex-1
   overflow-y-auto
-  p-hgap-md
 `);
 
 const imageColumnStyles = ctl(`
   ${columnStyles}
-  bg-zd-gray1
   flex flex-col items-center
 `);
 
