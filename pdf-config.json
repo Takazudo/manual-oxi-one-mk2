@@ -13,7 +13,7 @@
   "settings": {
     "pagesPerPart": 30,
     "imageFormat": "png",
-    "imageDPI": 150,
+    "imageDPI": 300,
     "translationModel": "claude-sonnet-4-5-20250929",
     "maxRetries": 3,
     "parallelProcessing": false

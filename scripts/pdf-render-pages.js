@@ -71,8 +71,12 @@ async function renderPdfPages() {
 
     try {
       // Convert PDF to PNG images
+      // Scale factor: DPI / 72 (PDF default DPI)
+      const scale = dpi / 72;
+
       const pngPages = await pdfToPng(partPath, {
         outputFolder: outputDir,
+        viewportScale: scale,
         pngOptions: {
           quality: 100,
           compression: 9,
