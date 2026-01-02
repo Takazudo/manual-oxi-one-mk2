@@ -1,27 +1,6 @@
 {
   "part": "01",
-  "totalPages": 30,
-  "metadata": {
-    "title": "OXI ONE MKII Manual - Part 01",
-    "sections": [
-      {
-        "name": "表紙・目次",
-        "pageRange": [1, 3]
-      },
-      {
-        "name": "概要 (Overview)",
-        "pageRange": [4, 10]
-      },
-      {
-        "name": "はじめに (Getting Started)",
-        "pageRange": [11, 20]
-      },
-      {
-        "name": "基本操作 (Basic Operations)",
-        "pageRange": [21, 30]
-      }
-    ]
-  },
+  "pageRange": [1, 5],
   "pages": [
     {
       "pageNum": 1,
