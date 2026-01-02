@@ -4,8 +4,8 @@ import ctl from '@netlify/classnames-template-literals';
 const headerStyles = ctl(`
   fixed top-0 left-0 right-0 z-50
   bg-zd-gray1
-  border-b border-zd-gray3
-  px-hgap-md py-vgap-sm
+  px-hgap-md
+  h-[60px]
   flex items-center justify-between
 `);
 

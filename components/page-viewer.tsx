@@ -3,37 +3,37 @@ import ctl from '@netlify/classnames-template-literals';
 import type { ManualPage } from '@/lib/types/manual';
 import { MarkdownRenderer } from './markdown-renderer';
 import { PageNavigation } from './page-navigation';
+import { KeyboardNavigation } from './keyboard-navigation';
+import { withBasePath } from '@/lib/asset-url';
 
 const containerStyles = ctl(`
   flex flex-col lg:flex-row
-  gap-hgap-md
-  h-[calc(100vh-60px)]
+  h-screen
   pt-[60px]
 `);
 
 const columnStyles = ctl(`
   flex-1
-  overflow-y-auto
-  p-hgap-md
+  overflow-y-scroll
+  min-h-0
 `);
 
 const imageColumnStyles = ctl(`
   ${columnStyles}
-  bg-zd-gray1
   flex flex-col items-center
+  bg-zd-white
 `);
 
 const contentColumnStyles = ctl(`
   ${columnStyles}
   bg-zd-gray2
+  px-hgap-sm
 `);
 
 const imageWrapperStyles = ctl(`
-  relative w-full max-w-2xl
+  relative w-full
   bg-zd-gray2
   rounded-md
-  overflow-hidden
-  border border-zd-gray3
 `);
 
 const navigationWrapperStyles = ctl(`
@@ -48,51 +48,53 @@ const pageTitleStyles = ctl(`
   text-zd-white
   mb-vgap-sm
   pb-vgap-sm
-  border-b border-zd-gray3
 `);
 
 interface PageViewerProps {
   page: ManualPage;
-  partNum: string;
+  currentPage: number;
   totalPages: number;
 }
 
-export function PageViewer({ page, partNum, totalPages }: PageViewerProps) {
+export function PageViewer({ page, currentPage, totalPages }: PageViewerProps) {
   return (
-    <div className={containerStyles}>
-      {/* Left Column: PDF Image */}
-      <div className={imageColumnStyles}>
-        <div className={imageWrapperStyles}>
-          <Image
-            src={page.image}
-            alt={`Page ${page.pageNum}: ${page.title}`}
-            width={1200}
-            height={1600}
-            className="w-full h-auto"
-            priority={page.pageNum === 1}
-          />
-        </div>
-      </div>
-
-      {/* Right Column: Translation */}
-      <div className={contentColumnStyles}>
-        <div className={navigationWrapperStyles}>
-          <PageNavigation partNum={partNum} currentPage={page.pageNum} totalPages={totalPages} />
+    <>
+      <KeyboardNavigation currentPage={currentPage} totalPages={totalPages} />
+      <div className={containerStyles}>
+        {/* Left Column: PDF Image */}
+        <div className={imageColumnStyles}>
+          <div className={imageWrapperStyles}>
+            <Image
+              src={withBasePath(page.image)}
+              alt={`Page ${currentPage}: ${page.title}`}
+              width={1200}
+              height={1600}
+              className="w-full h-auto"
+              priority={currentPage === 1}
+            />
+          </div>
         </div>
 
-        <div className={pageTitleStyles}>
-          {page.title}
-          {page.sectionName && (
-            <span className="text-sm text-zd-gray6 ml-hgap-sm">({page.sectionName})</span>
+        {/* Right Column: Translation */}
+        <div className={contentColumnStyles}>
+          <div className={navigationWrapperStyles}>
+            <PageNavigation currentPage={currentPage} totalPages={totalPages} />
+          </div>
+
+          <div className={pageTitleStyles}>
+            {page.title}
+            {page.sectionName && (
+              <span className="text-sm text-zd-gray6 ml-hgap-sm">({page.sectionName})</span>
+            )}
+          </div>
+
+          {page.hasContent ? (
+            <MarkdownRenderer content={page.translation} />
+          ) : (
+            <p className="text-zd-gray6 italic">このページには翻訳がありません</p>
           )}
         </div>
-
-        {page.hasContent ? (
-          <MarkdownRenderer content={page.translation} />
-        ) : (
-          <p className="text-zd-gray6 italic">このページには翻訳がありません</p>
-        )}
       </div>
-    </div>
+    </>
   );
 }

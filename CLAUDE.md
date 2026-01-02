@@ -4,17 +4,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Next.js-based manual viewer for the OXI ONE MKII hardware synthesizer manual. The site provides a bilingual viewing experience (original English PDF pages + Japanese translations) for the 272-page manual.
+This is a Next.js-based manual viewer for the OXI ONE MKII hardware synthesizer manual. The site provides a bilingual viewing experience (original English PDF pages + Japanese translations) with continuous page numbering.
 
 **Project Goal**: Create a web-based manual viewer that displays PDF page images alongside Japanese translations in a user-friendly, searchable interface.
+
+**URL Structure**:
+
+- Base path: `/manuals/oxi-one-mk2/`
+- Pages: `/manuals/oxi-one-mk2/page/[1-280]`
+- Example: `/manuals/oxi-one-mk2/page/1` (page 1)
 
 **Deployed Website**: https://manual-oxi-one-mk2.netlify.app/
 
 - This is the live production website that corresponds to the content in this repository
-- When referencing URLs like https://manual-oxi-one-mk2.netlify.app/*, the content exists in this repository
+- Full URL: `https://manual-oxi-one-mk2.netlify.app/manuals/oxi-one-mk2/`
+- When referencing URLs like https://manual-oxi-one-mk2.netlify.app/manuals/oxi-one-mk2/*, the content exists in this repository
 - The deployed site reflects the current state of the main branch
-- We may use URLs like `https://68c5b21d5e874f6f7be1cb1a--manual-oxi-one-mk2.netlify.app`
-- This `https://*--manual-oxi-one-mk2.netlify.app` is the preview deployed host by Netlify
+- Preview URLs: `https://*--manual-oxi-one-mk2.netlify.app/manuals/oxi-one-mk2/`
 - We use preview URLs for previewing PRs before merging to main
 
 ## Security Notes
@@ -54,11 +60,17 @@ Example files saved here:
 ```
 /
 ├── app/                 # Next.js app directory
-├── components/          # React components (TBD)
-├── lib/                 # Utilities and libraries (TBD)
-├── public/              # Static assets (TBD)
+│   ├── page/            # Continuous page viewer (/page/[1-280])
+│   └── part-01/         # Legacy redirect
+├── components/          # React components
+├── lib/                 # Utilities and libraries
+│   ├── manual-data.ts   # Data loading logic
+│   └── types/           # TypeScript type definitions
+├── public/              # Static assets
 │   └── manual/          # Manual page images
-├── data/                # Translation JSON data (TBD)
+├── data/                # Translation JSON data
+│   ├── translations/    # New structure with manifest
+│   └── part-01/         # Legacy data (for reference)
 ├── scripts/             # Build and migration scripts
 ├── doc/                 # Docusaurus documentation
 ├── worktrees/           # Git worktrees (gitignored)
@@ -316,8 +328,8 @@ This port mapping is crucial for human-to-AI communication. When users reference
 
 ### URL to File Mapping Examples
 
-- `http://localhost:3100/` → Next.js app in `/app/`
-- `http://localhost:3100/part-01/page/1` → Manual page viewer
+- `http://localhost:3100/manuals/oxi-one-mk2/` → Next.js app in `/app/`
+- `http://localhost:3100/manuals/oxi-one-mk2/page/1` → Manual page viewer
 - `http://localhost:3110/doc/inbox/` → Documentation in `/doc/docs/inbox/`
 
 ### Port Management
@@ -483,27 +495,45 @@ See `/doc/docs/inbox/design-system.md` for comprehensive documentation.
 
 ## Data Structure
 
-### Translation JSON Format
+The manual data is split into multiple files for better performance:
+
+### Directory Structure
+
+```
+/data/translations/
+├── manifest.json         # Master index with all parts
+├── part-01.json          # Pages 1-5 (currently available)
+└── (future parts...)     # Additional parts as they become available
+```
+
+### Manifest Format (`manifest.json`)
+
+```json
+{
+  "title": "OXI ONE MKII Manual",
+  "totalPages": 5,
+  "parts": [
+    {
+      "part": "01",
+      "pageRange": [1, 5],
+      "file": "/data/translations/part-01.json"
+    }
+  ]
+}
+```
+
+### Part JSON Format
 
 ```json
 {
   "part": "01",
-  "totalPages": 30,
-  "metadata": {
-    "title": "OXI ONE MKII Manual - Part 01",
-    "sections": [
-      {
-        "name": "概要 (Overview)",
-        "pageRange": [9, 18]
-      }
-    ]
-  },
+  "pageRange": [1, 5],
   "pages": [
     {
       "pageNum": 1,
-      "image": "/manual/part-01/pages/page_001.png",
+      "image": "/manual/part-01/pages/page_001.svg",
       "title": "表紙",
-      "sectionName": null,
+      "sectionName": "表紙・目次",
       "translation": "# Markdown content here...",
       "hasContent": true
     }
