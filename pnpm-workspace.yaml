@@ -1,4 +1,7 @@
 packages:
-  - '.'
-  - 'doc'
-  - 'scripts/md-formatter'
+  - .
+  - doc
+  - scripts/md-formatter
+
+onlyBuiltDependencies:
+  - canvas
