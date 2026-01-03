@@ -20,6 +20,7 @@ export default [
       'next-env.d.ts',
       'doc/**',
       'scripts/**',
+      'worktrees/**',
     ],
   },
 
