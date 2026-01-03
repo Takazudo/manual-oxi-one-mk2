@@ -10,6 +10,19 @@ allowed-tools: Bash, Read, Glob, Grep
 
 Automated workflow for converting the OXI ONE MKII PDF manual into Next.js application data.
 
+## ⚠️ CRITICAL: Process Adherence
+
+**When using this skill, Claude Code MUST follow the documented process EXACTLY as written in `.claude/commands/pdf-process.md`.**
+
+### Mandatory Rules:
+
+1. **NEVER deviate from the documented translation process**
+2. **NEVER use MCP Codex for translation** - Only use Task tool with manual-translator
+3. **NEVER implement "improvements" mid-process** - Report them after completion
+4. **ALWAYS use the worker pool pattern** as documented in the command file
+
+See `.claude/commands/pdf-process.md` for detailed execution instructions.
+
 ## Overview
 
 This skill guides the complete PDF processing pipeline:

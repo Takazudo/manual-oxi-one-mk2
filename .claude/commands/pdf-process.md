@@ -12,20 +12,36 @@ Run the complete PDF processing pipeline automatically.
 
 ## 🚨 CRITICAL INSTRUCTION FOR CLAUDE CODE
 
-**NEVER ask questions or suggest alternatives during translation execution.**
+**MANDATORY: You MUST follow the documented translation process EXACTLY as written in this command and in `.claude/skills/pdf-processing/SKILL.md`. NO EXCEPTIONS.**
 
-When executing this command:
+### Absolute Requirements During Execution:
 
-- ✅ Follow the documented process exactly
-- ✅ Execute all steps to completion
+1. **NEVER ask questions or suggest alternatives during translation execution**
+2. **NEVER use MCP Codex (`mcp__codex__spawn_agents_parallel` or any codex tools) for translation**
+3. **NEVER try to "optimize" or "improve" the process mid-execution**
+4. **ONLY use the Task tool with `subagent_type="manual-translator"` as documented**
+5. **Follow the exact worker pool pattern documented below**
+
+### During Execution:
+
+- ✅ Follow the documented process exactly - word for word
+- ✅ Use ONLY the Task tool for translation (NOT MCP Codex)
+- ✅ Execute all steps to completion without stopping
 - ✅ Handle errors by retrying or continuing
 - ❌ DO NOT stop to ask "what approach should we take?"
 - ❌ DO NOT suggest "better ways" mid-process
 - ❌ DO NOT ask for user permission during execution
+- ❌ DO NOT use MCP Codex or any other translation method
+- ❌ DO NOT implement "improvements" you discover mid-process
 
-**If you find improvements:** Note them internally and mention AFTER all translation is complete.
+### If You Discover Improvements:
 
-**This process has been run many times successfully - trust the documentation and execute.**
+- ✅ Note them internally
+- ✅ Report them AFTER all translation is 100% complete
+- ❌ DO NOT implement them during execution
+- ❌ DO NOT stop the process to discuss them
+
+**This process has been run many times successfully. Trust the documentation and execute it exactly as written.**
 
 ---
 
