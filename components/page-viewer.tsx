@@ -1,3 +1,6 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import ctl from '@netlify/classnames-template-literals';
 import type { ManualPage } from '@/lib/types/manual';
@@ -26,14 +29,19 @@ const imageColumnStyles = ctl(`
 
 const contentColumnStyles = ctl(`
   ${columnStyles}
-  bg-zd-gray2
   px-hgap-sm
 `);
 
 const imageWrapperStyles = ctl(`
   relative w-full
-  bg-zd-gray2
-  rounded-md
+  min-h-[400px]
+`);
+
+const loaderWrapperStyles = ctl(`
+  absolute
+  top-1/2 left-1/2
+  transform -translate-x-1/2 -translate-y-1/2
+  z-10
 `);
 
 const navigationWrapperStyles = ctl(`
@@ -57,6 +65,13 @@ interface PageViewerProps {
 }
 
 export function PageViewer({ page, currentPage, totalPages }: PageViewerProps) {
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Reset loading state when page changes
+  useEffect(() => {
+    setIsLoading(true);
+  }, [currentPage]);
+
   return (
     <>
       <KeyboardNavigation currentPage={currentPage} totalPages={totalPages} />
@@ -64,13 +79,19 @@ export function PageViewer({ page, currentPage, totalPages }: PageViewerProps) {
         {/* Left Column: PDF Image */}
         <div className={imageColumnStyles}>
           <div className={imageWrapperStyles}>
+            {isLoading && (
+              <div className={loaderWrapperStyles}>
+                <div className="page-image-loader" />
+              </div>
+            )}
             <Image
               src={withBasePath(page.image)}
               alt={`Page ${currentPage}: ${page.title}`}
               width={1200}
               height={1600}
-              className="w-full h-auto"
+              className={`w-full h-auto ${!isLoading ? 'page-image-fade-in' : 'opacity-0'}`}
               priority={currentPage === 1}
+              onLoad={() => setIsLoading(false)}
             />
           </div>
         </div>

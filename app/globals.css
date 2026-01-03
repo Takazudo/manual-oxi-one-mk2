@@ -521,3 +521,46 @@
   background-size: 20px 20px;
   padding-left: 28px;
 }
+
+/* Image Loading Spinner */
+.page-image-loader {
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+
+.page-image-loader:before,
+.page-image-loader:after {
+  content: '';
+  border-radius: 50%;
+  position: absolute;
+  inset: 0;
+  box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3) inset;
+}
+
+.page-image-loader:after {
+  box-shadow: 0 2px 0 var(--zd-color-strong) inset;
+  animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes imageLoadFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.page-image-fade-in {
+  animation: imageLoadFadeIn 0.3s ease-in-out forwards;
+}
