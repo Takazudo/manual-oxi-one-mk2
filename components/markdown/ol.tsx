@@ -3,15 +3,17 @@ import ctl from '@netlify/classnames-template-literals';
 
 interface OlProps {
   children?: React.ReactNode;
+  start?: number;
 }
 
 /**
  * Ordered list component for markdown rendering
  * Adapted from takazudomodular for manual viewer context
  */
-const Ol: React.FC<OlProps> = ({ children }) => {
+const Ol: React.FC<OlProps> = ({ children, start }) => {
   return (
     <ol
+      start={start}
       className={ctl(`
         text-sm md:text-base
         text-zd-gray7

@@ -357,6 +357,15 @@ pnpm doc:build
 # Serve production build locally
 pnpm serve
 
+# PDF Processing (Issue #21)
+pnpm run pdf:split       # Split PDF into parts
+pnpm run pdf:render      # Render pages to PNG images
+pnpm run pdf:extract     # Extract text from PDFs
+pnpm run pdf:translate   # Translate to Japanese (requires ANTHROPIC_API_KEY)
+pnpm run pdf:build       # Build final JSON files
+pnpm run pdf:manifest    # Create manifest.json
+pnpm run pdf:all         # Run all PDF processing steps
+
 # Type checking
 pnpm typecheck
 
@@ -375,6 +384,137 @@ pnpm check:fix
 # Clean build outputs
 pnpm clean
 ```
+
+## PDF Processing Automation
+
+**Claude Code Skill:** `/pdf-process`
+
+Automated workflow for converting the OXI ONE MKII PDF manual into Next.js application data using Claude Code Task subagents.
+
+### ⚠️ Important: Maintain the System, Not the Output
+
+**Critical Principle:** Translation output files (extracted text, translation drafts, final JSON) are **temporary generated files**. What we maintain and improve is the **system itself**:
+
+✅ **Maintain:**
+
+- Translator prompt (`.claude/agents/manual-translator.md`)
+- Processing scripts (`scripts/pdf-*.js`)
+- Command documentation (`.claude/commands/pdf-process.md`)
+- Pipeline configuration (`pdf-config.json`)
+
+❌ **Don't maintain (regenerate as needed):**
+
+- `data/extracted/` - Extracted text files
+- `data/translations-draft/` - Translation work-in-progress
+- `data/translations/` - Final JSON output
+- `public/manual/pages/` - Rendered images
+- `manual-pdf/parts/` - Split PDF files
+
+**When improving translation quality:** Update the translator prompt in `.claude/agents/manual-translator.md`, then regenerate outputs by running the pipeline again. The outputs are disposable - the process is what matters.
+
+### Quick Start
+
+```bash
+# 1. Place PDF in manual-pdf directory
+cp /path/to/OXI-ONE-MKII-Manual.pdf manual-pdf/
+
+# 2. Run full pipeline via Claude Code
+# Type: /pdf-process
+```
+
+**Claude Code will execute the pipeline without asking questions during translation.**
+
+### Pipeline Overview
+
+The PDF processing pipeline consists of 6 fully automated steps:
+
+1. **Split** - Divides the PDF into parts (30 pages each)
+2. **Render** - Converts pages to PNG images at 150 DPI
+3. **Extract** - Extracts text from each PDF part
+4. **Translate** - Translates to Japanese using Claude Code Task subagents (5 concurrent workers)
+5. **Build** - Combines data into JSON files for Next.js
+6. **Manifest** - Creates manifest.json with metadata
+
+**Total time:** ~15-30 minutes for a 280-page manual
+
+### Output Structure
+
+```
+manual-pdf/parts/            # Split PDF files
+public/manual/pages/         # Rendered PNG images (150 DPI)
+data/extracted/              # Extracted text (intermediate)
+data/translations-draft/     # Translation drafts (intermediate)
+data/translations/           # Final JSON files (for Next.js)
+  ├── manifest.json
+  ├── part-01.json
+  └── ...
+```
+
+### Configuration
+
+Edit `pdf-config.json` to customize settings:
+
+- Pages per part
+- Image DPI and format
+- Translation model
+- Max retries
+
+### Cost Estimation
+
+Translation using Claude Sonnet 4.5:
+
+- Estimated: $5-10 per full 280-page manual
+- Time: 15-30 minutes total
+
+### Error Handling
+
+- Error reports saved to `__inbox/`
+- Scripts can be resumed from failed step
+- Retry logic for API failures
+
+### Translation Verification
+
+**Claude Code Command:** `/verify-translation`
+
+After running the PDF processing pipeline, use this command to verify that translations match the page images.
+
+**What it does:**
+
+1. Starts dev server on port 3100 (if not running)
+2. Captures all 30 pages at high resolution (2000x1600) using `capture-all-pages` skill
+3. Verifies sample pages (1, 10, 15, 21, 30) for translation accuracy
+4. Checks for:
+   - ✅ Translation is present
+   - ✅ Page numbers match
+   - ✅ Content corresponds to image
+   - ❌ No missing translations
+   - ❌ No page number mismatches
+5. Generates verification report
+
+**Usage:**
+
+```bash
+# Ensure dev server is running
+pnpm dev
+
+# Run verification command
+/verify-translation
+```
+
+**Output location:** `__inbox/captures-{date}-{session}/`
+
+**Project-Specific Skill:** `capture-all-pages`
+
+This skill captures screenshots of all manual pages at high resolution for visual verification.
+
+- **Resolution:** 2000x1600 (high detail for inspection)
+- **Pages:** All 30 pages (or configured total)
+- **Output:** `__inbox/captures-{YYYYMMDD}-{session}/`
+- **Format:** PNG files named `page-001.png` to `page-030.png`
+
+The skill embeds Playwright logic directly and saves captures to the project's `__inbox/` directory (gitignored).
+
+**Full Documentation:** See `scripts/README-PDF-PROCESSING.md`
 
 ## Package Manager
 

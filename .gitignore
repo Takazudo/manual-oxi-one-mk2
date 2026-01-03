@@ -86,3 +86,20 @@ dist/
 # Lock files (pnpm only)
 package-lock.json
 yarn.lock
+
+# PDF Processing - Generated Files (Temporary/Intermediate)
+manual-pdf/pages/
+manual-pdf/parts/
+data/extracted/
+data/translations-draft/
+
+# PDF Processing - Keep final output (commit to repo)
+# data/translations/      # Commented out - we need to commit this
+# public/manual/pages/    # Commented out - we need to commit this
+
+# PDF Processing - Test Files (keep test PDFs local)
+manual-pdf/*.pdf
+!manual-pdf/OXI-ONE-MKII-Manual.pdf
+
+# Accidental paths
+Users/
