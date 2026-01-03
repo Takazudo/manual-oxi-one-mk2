@@ -8,8 +8,9 @@ import { getNavigationState } from '@/lib/manual-data';
 
 const navContainerStyles = ctl(`
   flex items-center justify-between gap-hgap-sm
-  bg-zd-gray2 border border-zd-gray3 border-0 border-b-1
   pb-vgap-sm
+  border-b border-zd-gray
+  border-dashed
 `);
 
 const buttonStyles = ctl(`

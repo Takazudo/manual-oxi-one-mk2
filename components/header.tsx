@@ -7,6 +7,8 @@ const headerStyles = ctl(`
   px-hgap-md
   h-[60px]
   flex items-center justify-between
+  shadow-lg shadow-zd-white/5
+  z-50
 `);
 
 const titleStyles = ctl(`

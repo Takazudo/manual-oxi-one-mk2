@@ -39,7 +39,7 @@ export default function Home() {
         <h1 className={titleStyles}>
           OXI ONE MKII
           <br />
-          マニュアル 日本語
+          マニュアル 日本語訳
         </h1>
         <p className={descriptionStyles}>
           OXI ONE

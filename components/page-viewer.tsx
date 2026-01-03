@@ -35,6 +35,8 @@ const contentColumnStyles = ctl(`
 const imageWrapperStyles = ctl(`
   relative w-full
   min-h-[400px]
+  h-full
+  content-center
 `);
 
 const loaderWrapperStyles = ctl(`
@@ -47,15 +49,10 @@ const loaderWrapperStyles = ctl(`
 const navigationWrapperStyles = ctl(`
   sticky top-0 z-10
   mb-vgap-md
-  bg-zd-gray2
   pt-vgap-sm
-`);
-
-const pageTitleStyles = ctl(`
-  text-xl font-bold
-  text-zd-white
-  mb-vgap-sm
-  pb-vgap-sm
+  px-hgap-sm
+  -mx-hgap-sm
+  bg-zd-black/90
 `);
 
 interface PageViewerProps {
@@ -100,13 +97,6 @@ export function PageViewer({ page, currentPage, totalPages }: PageViewerProps) {
         <div className={contentColumnStyles}>
           <div className={navigationWrapperStyles}>
             <PageNavigation currentPage={currentPage} totalPages={totalPages} />
-          </div>
-
-          <div className={pageTitleStyles}>
-            {page.title}
-            {page.sectionName && (
-              <span className="text-sm text-zd-gray6 ml-hgap-sm">({page.sectionName})</span>
-            )}
           </div>
 
           {page.hasContent ? (
