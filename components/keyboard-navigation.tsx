@@ -8,6 +8,7 @@ import { getPagePath } from '@/lib/manual-config';
 interface KeyboardNavigationProps {
   currentPage: number;
   totalPages: number;
+  manualId: string;
 }
 
 /**
@@ -15,7 +16,7 @@ interface KeyboardNavigationProps {
  * - Left arrow: Previous page
  * - Right arrow: Next page
  */
-export function KeyboardNavigation({ currentPage, totalPages }: KeyboardNavigationProps) {
+export function KeyboardNavigation({ currentPage, totalPages, manualId }: KeyboardNavigationProps) {
   const router = useRouter();
 
   useEffect(() => {
@@ -37,21 +38,21 @@ export function KeyboardNavigation({ currentPage, totalPages }: KeyboardNavigati
       if (e.key === 'ArrowLeft') {
         e.preventDefault();
         if (canGoToPrev) {
-          router.push(getPagePath(currentPage - 1));
+          router.push(getPagePath(manualId, currentPage - 1));
         }
       }
       // Right arrow: Next page
       else if (e.key === 'ArrowRight') {
         e.preventDefault();
         if (canGoToNext) {
-          router.push(getPagePath(currentPage + 1));
+          router.push(getPagePath(manualId, currentPage + 1));
         }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentPage, totalPages, router]);
+  }, [currentPage, totalPages, manualId, router]);
 
   return null; // This component doesn't render anything
 }

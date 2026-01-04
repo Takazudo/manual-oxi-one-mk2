@@ -41,14 +41,15 @@ const selectStyles = ctl(`
 interface PageNavigationProps {
   currentPage: number;
   totalPages: number;
+  manualId: string;
 }
 
-export function PageNavigation({ currentPage, totalPages }: PageNavigationProps) {
+export function PageNavigation({ currentPage, totalPages, manualId }: PageNavigationProps) {
   const router = useRouter();
 
   const handlePageSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const page = parseInt(e.target.value);
-    router.push(getPagePath(page));
+    router.push(getPagePath(manualId, page));
   };
 
   const { canGoToPrev, canGoToNext } = getNavigationState(currentPage, totalPages);
@@ -62,7 +63,7 @@ export function PageNavigation({ currentPage, totalPages }: PageNavigationProps)
   return (
     <nav className={navContainerStyles}>
       {canGoToPrev ? (
-        <Link href={getPagePath(currentPage - 1)} className={buttonStyles}>
+        <Link href={getPagePath(manualId, currentPage - 1)} className={buttonStyles}>
           ← 前へ
         </Link>
       ) : (
@@ -89,7 +90,7 @@ export function PageNavigation({ currentPage, totalPages }: PageNavigationProps)
       </div>
 
       {canGoToNext ? (
-        <Link href={getPagePath(currentPage + 1)} className={buttonStyles}>
+        <Link href={getPagePath(manualId, currentPage + 1)} className={buttonStyles}>
           次へ →
         </Link>
       ) : (

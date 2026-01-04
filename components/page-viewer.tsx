@@ -59,9 +59,10 @@ interface PageViewerProps {
   page: ManualPage;
   currentPage: number;
   totalPages: number;
+  manualId: string;
 }
 
-export function PageViewer({ page, currentPage, totalPages }: PageViewerProps) {
+export function PageViewer({ page, currentPage, totalPages, manualId }: PageViewerProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
@@ -73,7 +74,7 @@ export function PageViewer({ page, currentPage, totalPages }: PageViewerProps) {
 
   return (
     <>
-      <KeyboardNavigation currentPage={currentPage} totalPages={totalPages} />
+      <KeyboardNavigation currentPage={currentPage} totalPages={totalPages} manualId={manualId} />
       <div className={containerStyles}>
         {/* Left Column: PDF Image */}
         <div className={imageColumnStyles}>
@@ -111,7 +112,7 @@ export function PageViewer({ page, currentPage, totalPages }: PageViewerProps) {
         {/* Right Column: Translation */}
         <div className={contentColumnStyles}>
           <div className={navigationWrapperStyles}>
-            <PageNavigation currentPage={currentPage} totalPages={totalPages} />
+            <PageNavigation currentPage={currentPage} totalPages={totalPages} manualId={manualId} />
           </div>
 
           {page.hasContent ? (
