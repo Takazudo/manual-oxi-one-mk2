@@ -47,7 +47,7 @@ export function PageNavigation({ currentPage, totalPages }: PageNavigationProps)
 
   const handlePageSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const page = parseInt(e.target.value);
-    router.push(`/page/${page}`);
+    router.push(`/manuals/oxi-one-mk2/page/${page}`);
   };
 
   const { canGoToPrev, canGoToNext } = getNavigationState(currentPage, totalPages);
@@ -61,7 +61,7 @@ export function PageNavigation({ currentPage, totalPages }: PageNavigationProps)
   return (
     <nav className={navContainerStyles}>
       {canGoToPrev ? (
-        <Link href={`/page/${currentPage - 1}`} className={buttonStyles}>
+        <Link href={`/manuals/oxi-one-mk2/page/${currentPage - 1}`} className={buttonStyles}>
           ← 前へ
         </Link>
       ) : (
@@ -88,7 +88,7 @@ export function PageNavigation({ currentPage, totalPages }: PageNavigationProps)
       </div>
 
       {canGoToNext ? (
-        <Link href={`/page/${currentPage + 1}`} className={buttonStyles}>
+        <Link href={`/manuals/oxi-one-mk2/page/${currentPage + 1}`} className={buttonStyles}>
           次へ →
         </Link>
       ) : (
