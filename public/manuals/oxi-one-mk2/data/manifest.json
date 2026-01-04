@@ -14,7 +14,7 @@
     {
       "part": "01",
       "pageRange": [1, 30],
-      "file": "/data/translations/part-01.json",
+      "file": "/manuals/oxi-one-mk2/data/part-01.json",
       "sections": [],
       "totalPages": 30,
       "contentPages": 27
