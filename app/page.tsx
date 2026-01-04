@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import ctl from '@netlify/classnames-template-literals';
 import { ArrowRight } from '@/components/svg';
+import { getPagePath } from '@/lib/manual-config';
 
 const containerStyles = ctl(`
   min-h-screen pt-[60px]
@@ -56,7 +57,7 @@ export default function Home() {
           の翻訳参考としてお役立てください。ページは <code className={codeStyles}>←</code>{' '}
           <code className={codeStyles}>→</code> キーで移動可能です。
         </p>
-        <Link href="/page/1" className={linkStyles}>
+        <Link href={getPagePath(1)} className={linkStyles}>
           <span className="pr-[7px]">
             <ArrowRight
               aria-hidden="true"
@@ -65,7 +66,6 @@ export default function Home() {
           </span>
           <span>マニュアルを読む</span>
         </Link>
-        <p></p>
       </div>
     </main>
   );
