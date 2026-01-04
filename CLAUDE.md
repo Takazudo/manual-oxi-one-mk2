@@ -23,6 +23,24 @@ This is a Next.js-based manual viewer for the OXI ONE MKII hardware synthesizer 
 - Preview URLs: `https://*--manual-oxi-one-mk2.netlify.app/manuals/oxi-one-mk2/`
 - We use preview URLs for previewing PRs before merging to main
 
+## Language Guidelines
+
+**Development Language: English**
+
+- All communication with Claude Code should be in **English**
+- GitHub issues, PRs, commit messages, and code comments: **English**
+- Documentation (CLAUDE.md, README.md, code documentation): **English**
+- Technical discussions and planning: **English**
+
+**Application Language: Japanese**
+
+- The app itself is for Japanese users
+- HTML lang attribute: `lang="ja"`
+- UI text, translations, and user-facing content: **Japanese**
+- Manual translations: **Japanese**
+
+**Rationale:** This project may collaborate with international developers or be referenced globally. Using English for development ensures accessibility while keeping the end-user experience fully localized for Japanese users.
+
 ## Security Notes
 
 - **NEVER use `rm -rf` with absolute paths** - Always use relative paths like `rm -rf ./foo/bar`
