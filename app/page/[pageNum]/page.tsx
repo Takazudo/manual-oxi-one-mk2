@@ -1,6 +1,6 @@
-import { notFound } from 'next/navigation';
-import { getManualPage, getTotalPages, pageExists, getManifest } from '@/lib/manual-data';
-import { PageViewer } from '@/components/page-viewer';
+import { redirect } from 'next/navigation';
+import { getPagePath } from '@/lib/manual-config';
+import { getManifest } from '@/lib/manual-data';
 
 interface PageParams {
   pageNum: string;
@@ -11,7 +11,7 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-  const manifest = getManifest();
+  const manifest = getManifest('oxi-one-mk2');
   const params: Array<{ pageNum: string }> = [];
 
   // Generate pages for all parts listed in the manifest
@@ -24,46 +24,11 @@ export async function generateStaticParams() {
   return params;
 }
 
-export async function generateMetadata({ params }: PageProps) {
-  const resolvedParams = await params;
-  const pageNum = Number(resolvedParams.pageNum);
-
-  // Validate page number is a positive integer
-  if (!Number.isInteger(pageNum) || pageNum < 1) {
-    return {
-      title: 'Page Not Found - OXI ONE MKII Manual',
-    };
-  }
-
-  const page = getManualPage(pageNum);
-
-  if (!page) {
-    return {
-      title: 'Page Not Found - OXI ONE MKII Manual',
-    };
-  }
-
-  return {
-    title: `${page.title} (Page ${pageNum}) - OXI ONE MKII Manual`,
-    description: `OXI ONE MKII Manual - Page ${pageNum}: ${page.title}`,
-  };
-}
-
 export default async function Page({ params }: PageProps) {
   const resolvedParams = await params;
   const pageNum = Number(resolvedParams.pageNum);
 
-  // Validate page number is a positive integer
-  if (!Number.isInteger(pageNum) || pageNum < 1 || !pageExists(pageNum)) {
-    notFound();
-  }
-
-  const page = getManualPage(pageNum);
-  const totalPages = getTotalPages();
-
-  if (!page) {
-    notFound();
-  }
-
-  return <PageViewer page={page} currentPage={pageNum} totalPages={totalPages} />;
+  // Redirect old page route to new manual-specific route
+  // Hardcoded to oxi-one-mk2 as this is a legacy redirect
+  redirect(getPagePath('oxi-one-mk2', pageNum));
 }

@@ -57,7 +57,7 @@ export default function Home() {
           の翻訳参考としてお役立てください。ページは <code className={codeStyles}>←</code>{' '}
           <code className={codeStyles}>→</code> キーで移動可能です。
         </p>
-        <Link href={getPagePath(1)} className={linkStyles}>
+        <Link href={getPagePath('oxi-one-mk2', 1)} className={linkStyles}>
           <span className="pr-[7px]">
             <ArrowRight
               aria-hidden="true"

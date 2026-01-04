@@ -1,24 +1,46 @@
 /**
  * Centralized manual configuration
- * All manual-related paths and IDs should reference this file
+ * All manual-related paths should reference this file
  */
-
-export const MANUAL_ID = 'oxi-one-mk2';
-export const MANUAL_BASE_PATH = `/manuals/${MANUAL_ID}`;
-export const MANUAL_DATA_PATH = `/public/manuals/${MANUAL_ID}/data`;
-export const MANUAL_PAGES_PATH = `/public/manuals/${MANUAL_ID}/pages`;
-export const MANUAL_PROCESSING_PATH = `/public/manuals/${MANUAL_ID}/processing`;
 
 /**
- * Get the full page path for a given page number
+ * Get the base path for a specific manual
  */
-export function getPagePath(pageNum: number): string {
-  return `${MANUAL_BASE_PATH}/page/${pageNum}`;
+export function getManualBasePath(manualId: string): string {
+  return `/manuals/${manualId}`;
 }
 
 /**
- * Get the data file path for a given part
+ * Get the full page path for a given page number in a specific manual
  */
-export function getPartDataPath(partNum: string): string {
-  return `${MANUAL_DATA_PATH}/part-${partNum}.json`;
+export function getPagePath(manualId: string, pageNum: number): string {
+  return `${getManualBasePath(manualId)}/page/${pageNum}`;
+}
+
+/**
+ * Get the data directory path for a specific manual
+ */
+export function getManualDataPath(manualId: string): string {
+  return `/public/manuals/${manualId}/data`;
+}
+
+/**
+ * Get the pages directory path for a specific manual
+ */
+export function getManualPagesPath(manualId: string): string {
+  return `/public/manuals/${manualId}/pages`;
+}
+
+/**
+ * Get the processing directory path for a specific manual
+ */
+export function getManualProcessingPath(manualId: string): string {
+  return `/public/manuals/${manualId}/processing`;
+}
+
+/**
+ * Get the data file path for a given part in a specific manual
+ */
+export function getPartDataPath(manualId: string, partNum: string): string {
+  return `${getManualDataPath(manualId)}/part-${partNum}.json`;
 }
