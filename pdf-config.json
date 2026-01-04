@@ -1,15 +1,4 @@
 {
-  "input": {
-    "pdfDirectory": "manual-pdf",
-    "pdfPattern": "*.pdf"
-  },
-  "output": {
-    "pages": "manual-pdf/pages",
-    "images": "public/manuals/oxi-one-mk2/pages",
-    "extracted": "public/manuals/oxi-one-mk2/processing/extracted",
-    "translationsDraft": "public/manuals/oxi-one-mk2/processing/translations-draft",
-    "translations": "public/manuals/oxi-one-mk2/data"
-  },
   "settings": {
     "pagesPerPart": 30,
     "imageFormat": "png",
