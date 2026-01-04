@@ -1,17 +1,17 @@
 import type { ManualManifest, ManualPart, ManualPage, PartInfo } from './types/manual';
-import manifestDataRaw from '@/data/translations/manifest.json';
+import manifestDataRaw from '@/public/manuals/oxi-one-mk2/data/manifest.json';
 
 // Import all part data
-import part01DataRaw from '@/data/translations/part-01.json';
-import part02DataRaw from '@/data/translations/part-02.json';
-import part03DataRaw from '@/data/translations/part-03.json';
-import part04DataRaw from '@/data/translations/part-04.json';
-import part05DataRaw from '@/data/translations/part-05.json';
-import part06DataRaw from '@/data/translations/part-06.json';
-import part07DataRaw from '@/data/translations/part-07.json';
-import part08DataRaw from '@/data/translations/part-08.json';
-import part09DataRaw from '@/data/translations/part-09.json';
-import part10DataRaw from '@/data/translations/part-10.json';
+import part01DataRaw from '@/public/manuals/oxi-one-mk2/data/part-01.json';
+import part02DataRaw from '@/public/manuals/oxi-one-mk2/data/part-02.json';
+import part03DataRaw from '@/public/manuals/oxi-one-mk2/data/part-03.json';
+import part04DataRaw from '@/public/manuals/oxi-one-mk2/data/part-04.json';
+import part05DataRaw from '@/public/manuals/oxi-one-mk2/data/part-05.json';
+import part06DataRaw from '@/public/manuals/oxi-one-mk2/data/part-06.json';
+import part07DataRaw from '@/public/manuals/oxi-one-mk2/data/part-07.json';
+import part08DataRaw from '@/public/manuals/oxi-one-mk2/data/part-08.json';
+import part09DataRaw from '@/public/manuals/oxi-one-mk2/data/part-09.json';
+import part10DataRaw from '@/public/manuals/oxi-one-mk2/data/part-10.json';
 
 // Type-safe wrappers for JSON imports
 const manifestData = manifestDataRaw as unknown as ManualManifest;
