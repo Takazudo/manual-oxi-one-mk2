@@ -61,24 +61,33 @@ export function PageNavigation({ currentPage, totalPages, manualId }: PageNaviga
   );
 
   return (
-    <nav className={navContainerStyles}>
+    <nav className={navContainerStyles} data-testid="page-navigation">
       {canGoToPrev ? (
-        <Link href={getPagePath(manualId, currentPage - 1)} className={buttonStyles}>
+        <Link
+          href={getPagePath(manualId, currentPage - 1)}
+          className={buttonStyles}
+          data-testid="prev-page-button"
+        >
           ← 前へ
         </Link>
       ) : (
-        <span className={`${buttonStyles} opacity-50 cursor-not-allowed`} aria-disabled="true">
+        <span
+          className={`${buttonStyles} opacity-50 cursor-not-allowed`}
+          aria-disabled="true"
+          data-testid="prev-page-button-disabled"
+        >
           ← 前へ
         </span>
       )}
 
-      <div className={pageInfoStyles}>
+      <div className={pageInfoStyles} data-testid="page-info">
         <span>ページ</span>
         <select
           value={currentPage}
           onChange={handlePageSelect}
           className={selectStyles}
           aria-label="ページを選択"
+          data-testid="page-selector"
         >
           {pageOptions.map((page) => (
             <option key={page} value={page}>
@@ -86,15 +95,23 @@ export function PageNavigation({ currentPage, totalPages, manualId }: PageNaviga
             </option>
           ))}
         </select>
-        <span>/ {totalPages}</span>
+        <span data-testid="total-pages">/ {totalPages}</span>
       </div>
 
       {canGoToNext ? (
-        <Link href={getPagePath(manualId, currentPage + 1)} className={buttonStyles}>
+        <Link
+          href={getPagePath(manualId, currentPage + 1)}
+          className={buttonStyles}
+          data-testid="next-page-button"
+        >
           次へ →
         </Link>
       ) : (
-        <span className={`${buttonStyles} opacity-50 cursor-not-allowed`} aria-disabled="true">
+        <span
+          className={`${buttonStyles} opacity-50 cursor-not-allowed`}
+          aria-disabled="true"
+          data-testid="next-page-button-disabled"
+        >
           次へ →
         </span>
       )}

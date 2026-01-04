@@ -77,15 +77,15 @@ export function PageViewer({ page, currentPage, totalPages, manualId }: PageView
       <KeyboardNavigation currentPage={currentPage} totalPages={totalPages} manualId={manualId} />
       <div className={containerStyles}>
         {/* Left Column: PDF Image */}
-        <div className={imageColumnStyles}>
-          <div className={imageWrapperStyles}>
+        <div className={imageColumnStyles} data-testid="page-image-column">
+          <div className={imageWrapperStyles} data-testid="page-image-wrapper">
             {isLoading && !hasError && (
               <div className={loaderWrapperStyles}>
                 <div className="page-image-loader" />
               </div>
             )}
             {hasError ? (
-              <div className={loaderWrapperStyles}>
+              <div className={loaderWrapperStyles} data-testid="page-image-error">
                 <div className="text-zd-red text-center">
                   <p className="text-lg font-bold mb-vgap-xs">画像の読み込みに失敗しました</p>
                   <p className="text-sm text-zd-gray6">ページ {currentPage}</p>
@@ -104,21 +104,26 @@ export function PageViewer({ page, currentPage, totalPages, manualId }: PageView
                   setIsLoading(false);
                   setHasError(true);
                 }}
+                data-testid="page-image"
               />
             )}
           </div>
         </div>
 
         {/* Right Column: Translation */}
-        <div className={contentColumnStyles}>
-          <div className={navigationWrapperStyles}>
+        <div className={contentColumnStyles} data-testid="translation-column">
+          <div className={navigationWrapperStyles} data-testid="page-navigation-wrapper">
             <PageNavigation currentPage={currentPage} totalPages={totalPages} manualId={manualId} />
           </div>
 
           {page.hasContent ? (
-            <MarkdownRenderer content={page.translation} />
+            <div data-testid="translation-panel">
+              <MarkdownRenderer content={page.translation} />
+            </div>
           ) : (
-            <p className="text-zd-gray6 italic">このページには翻訳がありません</p>
+            <p className="text-zd-gray6 italic" data-testid="no-translation-message">
+              このページには翻訳がありません
+            </p>
           )}
         </div>
       </div>
