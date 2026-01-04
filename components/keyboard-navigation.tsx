@@ -36,14 +36,14 @@ export function KeyboardNavigation({ currentPage, totalPages }: KeyboardNavigati
       if (e.key === 'ArrowLeft') {
         e.preventDefault();
         if (canGoToPrev) {
-          router.push(`/page/${currentPage - 1}`);
+          router.push(`/manuals/oxi-one-mk2/page/${currentPage - 1}`);
         }
       }
       // Right arrow: Next page
       else if (e.key === 'ArrowRight') {
         e.preventDefault();
         if (canGoToNext) {
-          router.push(`/page/${currentPage + 1}`);
+          router.push(`/manuals/oxi-one-mk2/page/${currentPage + 1}`);
         }
       }
     };
