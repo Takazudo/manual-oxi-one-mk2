@@ -22,7 +22,35 @@ import oxiOneMk2Part08 from '@/public/manuals/oxi-one-mk2/data/part-08.json';
 import oxiOneMk2Part09 from '@/public/manuals/oxi-one-mk2/data/part-09.json';
 import oxiOneMk2Part10 from '@/public/manuals/oxi-one-mk2/data/part-10.json';
 
+// Import oxi-coral manifest
+import oxiCoralManifest from '@/public/manuals/oxi-coral/data/manifest.json';
+
+// Import all oxi-coral parts
+import oxiCoralPart01 from '@/public/manuals/oxi-coral/data/part-01.json';
+import oxiCoralPart02 from '@/public/manuals/oxi-coral/data/part-02.json';
+
+// Import oxi-e16-quick-start manifest
+import oxiE16QuickStartManifest from '@/public/manuals/oxi-e16-quick-start/data/manifest.json';
+
+// Import all oxi-e16-quick-start parts
+import oxiE16QuickStartPart01 from '@/public/manuals/oxi-e16-quick-start/data/part-01.json';
+
+// Import oxi-e16-manual manifest
+import oxiE16ManualManifest from '@/public/manuals/oxi-e16-manual/data/manifest.json';
+
+// Import all oxi-e16-manual parts
+import oxiE16ManualPart01 from '@/public/manuals/oxi-e16-manual/data/part-01.json';
+
+// Import addac112-looper manifest
+import addac112LooperManifest from '@/public/manuals/addac112-looper/data/manifest.json';
+
+// Import all addac112-looper parts
+import addac112LooperPart01 from '@/public/manuals/addac112-looper/data/part-01.json';
+import addac112LooperPart02 from '@/public/manuals/addac112-looper/data/part-02.json';
+
 // Build part registry for oxi-one-mk2
+// Note: Double-cast needed because JSON imports infer pageRange as number[]
+// but our type requires [number, number] tuple
 const OXI_ONE_MK2_PARTS: Record<string, ManualPart> = {
   '01': oxiOneMk2Part01 as unknown as ManualPart,
   '02': oxiOneMk2Part02 as unknown as ManualPart,
@@ -34,6 +62,28 @@ const OXI_ONE_MK2_PARTS: Record<string, ManualPart> = {
   '08': oxiOneMk2Part08 as unknown as ManualPart,
   '09': oxiOneMk2Part09 as unknown as ManualPart,
   '10': oxiOneMk2Part10 as unknown as ManualPart,
+};
+
+// Build part registry for oxi-coral
+const OXI_CORAL_PARTS: Record<string, ManualPart> = {
+  '01': oxiCoralPart01 as unknown as ManualPart,
+  '02': oxiCoralPart02 as unknown as ManualPart,
+};
+
+// Build part registry for oxi-e16-quick-start
+const OXI_E16_QUICK_START_PARTS: Record<string, ManualPart> = {
+  '01': oxiE16QuickStartPart01 as unknown as ManualPart,
+};
+
+// Build part registry for oxi-e16-manual
+const OXI_E16_MANUAL_PARTS: Record<string, ManualPart> = {
+  '01': oxiE16ManualPart01 as unknown as ManualPart,
+};
+
+// Build part registry for addac112-looper
+const ADDAC112_LOOPER_PARTS: Record<string, ManualPart> = {
+  '01': addac112LooperPart01 as unknown as ManualPart,
+  '02': addac112LooperPart02 as unknown as ManualPart,
 };
 
 export interface ManualRegistryEntry {
@@ -53,7 +103,22 @@ const MANUAL_REGISTRY: Record<string, ManualRegistryEntry> = {
     manifest: oxiOneMk2Manifest as unknown as ManualManifest,
     parts: OXI_ONE_MK2_PARTS,
   },
-  // Future manuals can be added here
+  'oxi-coral': {
+    manifest: oxiCoralManifest as unknown as ManualManifest,
+    parts: OXI_CORAL_PARTS,
+  },
+  'oxi-e16-quick-start': {
+    manifest: oxiE16QuickStartManifest as unknown as ManualManifest,
+    parts: OXI_E16_QUICK_START_PARTS,
+  },
+  'oxi-e16-manual': {
+    manifest: oxiE16ManualManifest as unknown as ManualManifest,
+    parts: OXI_E16_MANUAL_PARTS,
+  },
+  'addac112-looper': {
+    manifest: addac112LooperManifest as unknown as ManualManifest,
+    parts: ADDAC112_LOOPER_PARTS,
+  },
 };
 
 /**
@@ -69,20 +134,25 @@ export function getManifest(manualId: string): ManualManifest {
 
 /**
  * Get part data for a specific manual and part number
+ * @throws {Error} if manual ID or part number is not found
  */
-export function getPartData(manualId: string, partNum: string): ManualPart | null {
+export function getPartData(manualId: string, partNum: string): ManualPart {
   const entry = MANUAL_REGISTRY[manualId];
   if (!entry) {
-    return null;
+    throw new Error(`Manual not found: ${manualId}`);
   }
-  return entry.parts[partNum] || null;
+  const part = entry.parts[partNum];
+  if (!part) {
+    throw new Error(`Part ${partNum} not found for manual: ${manualId}`);
+  }
+  return part;
 }
 
 /**
- * Get list of all available manual IDs
+ * Get list of all available manual IDs (sorted alphabetically)
  */
 export function getAvailableManuals(): string[] {
-  return Object.keys(MANUAL_REGISTRY);
+  return Object.keys(MANUAL_REGISTRY).sort();
 }
 
 /**

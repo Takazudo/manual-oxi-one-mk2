@@ -43,12 +43,8 @@ export function getManualPart(manualId: string, partNum: string): ManualPart {
     return partDataCache[manualId][partNum];
   }
 
-  // Load from registry
+  // Load from registry (throws if not found)
   const partData = getPartData(manualId, partNum);
-
-  if (!partData) {
-    throw new Error(`Manual part ${partNum} not found for manual ${manualId}`);
-  }
 
   // Cache the loaded part
   partDataCache[manualId][partNum] = partData;
