@@ -35,6 +35,12 @@ import oxiE16QuickStartManifest from '@/public/manuals/oxi-e16-quick-start/data/
 // Import all oxi-e16-quick-start parts
 import oxiE16QuickStartPart01 from '@/public/manuals/oxi-e16-quick-start/data/part-01.json';
 
+// Import oxi-e16-manual manifest
+import oxiE16ManualManifest from '@/public/manuals/oxi-e16-manual/data/manifest.json';
+
+// Import all oxi-e16-manual parts
+import oxiE16ManualPart01 from '@/public/manuals/oxi-e16-manual/data/part-01.json';
+
 // Build part registry for oxi-one-mk2
 // Note: Double-cast needed because JSON imports infer pageRange as number[]
 // but our type requires [number, number] tuple
@@ -62,6 +68,11 @@ const OXI_E16_QUICK_START_PARTS: Record<string, ManualPart> = {
   '01': oxiE16QuickStartPart01 as unknown as ManualPart,
 };
 
+// Build part registry for oxi-e16-manual
+const OXI_E16_MANUAL_PARTS: Record<string, ManualPart> = {
+  '01': oxiE16ManualPart01 as unknown as ManualPart,
+};
+
 export interface ManualRegistryEntry {
   manifest: ManualManifest;
   parts: Record<string, ManualPart>;
@@ -86,6 +97,10 @@ const MANUAL_REGISTRY: Record<string, ManualRegistryEntry> = {
   'oxi-e16-quick-start': {
     manifest: oxiE16QuickStartManifest as unknown as ManualManifest,
     parts: OXI_E16_QUICK_START_PARTS,
+  },
+  'oxi-e16-manual': {
+    manifest: oxiE16ManualManifest as unknown as ManualManifest,
+    parts: OXI_E16_MANUAL_PARTS,
   },
 };
 
