@@ -66,11 +66,11 @@ export function PageViewer({ page, currentPage, totalPages, manualId }: PageView
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
-  // Reset loading and error state when page changes
+  // Reset loading and error state when page or manual changes
   useEffect(() => {
     setIsLoading(true);
     setHasError(false);
-  }, [currentPage]);
+  }, [currentPage, manualId]);
 
   return (
     <>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { getNavigationState } from '@/lib/manual-data';
 import { getPagePath } from '@/lib/manual-config';
 
@@ -18,6 +18,12 @@ interface KeyboardNavigationProps {
  */
 export function KeyboardNavigation({ currentPage, totalPages, manualId }: KeyboardNavigationProps) {
   const router = useRouter();
+  const routerRef = useRef(router);
+
+  // Keep router ref up to date
+  useEffect(() => {
+    routerRef.current = router;
+  }, [router]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -38,21 +44,21 @@ export function KeyboardNavigation({ currentPage, totalPages, manualId }: Keyboa
       if (e.key === 'ArrowLeft') {
         e.preventDefault();
         if (canGoToPrev) {
-          router.push(getPagePath(manualId, currentPage - 1));
+          routerRef.current.push(getPagePath(manualId, currentPage - 1));
         }
       }
       // Right arrow: Next page
       else if (e.key === 'ArrowRight') {
         e.preventDefault();
         if (canGoToNext) {
-          router.push(getPagePath(manualId, currentPage + 1));
+          routerRef.current.push(getPagePath(manualId, currentPage + 1));
         }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentPage, totalPages, manualId, router]);
+  }, [currentPage, totalPages, manualId]);
 
   return null; // This component doesn't render anything
 }

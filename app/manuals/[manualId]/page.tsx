@@ -96,9 +96,13 @@ export default async function ManualIndexPage({ params }: ManualIndexPageProps) 
         <p className={descriptionStyles}>
           {manifest.title}
           マニュアルの日本語訳です。翻訳はAIによる自動生成で行われており、正確性を保証するものではありません。
-          <Link href="https://drive.google.com/file/d/1LdJvG-GqzzKI2qw92CyZKklE7kSoZLFE/view">
+          <a
+            href="https://drive.google.com/file/d/1LdJvG-GqzzKI2qw92CyZKklE7kSoZLFE/view"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             公式マニュアル
-          </Link>
+          </a>
           の翻訳参考としてお役立てください。ページは <code className={codeStyles}>←</code>{' '}
           <code className={codeStyles}>→</code> キーで移動可能です。
         </p>
