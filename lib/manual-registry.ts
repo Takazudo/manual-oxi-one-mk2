@@ -41,6 +41,13 @@ import oxiE16ManualManifest from '@/public/manuals/oxi-e16-manual/data/manifest.
 // Import all oxi-e16-manual parts
 import oxiE16ManualPart01 from '@/public/manuals/oxi-e16-manual/data/part-01.json';
 
+// Import addac112-looper manifest
+import addac112LooperManifest from '@/public/manuals/addac112-looper/data/manifest.json';
+
+// Import all addac112-looper parts
+import addac112LooperPart01 from '@/public/manuals/addac112-looper/data/part-01.json';
+import addac112LooperPart02 from '@/public/manuals/addac112-looper/data/part-02.json';
+
 // Build part registry for oxi-one-mk2
 // Note: Double-cast needed because JSON imports infer pageRange as number[]
 // but our type requires [number, number] tuple
@@ -73,6 +80,12 @@ const OXI_E16_MANUAL_PARTS: Record<string, ManualPart> = {
   '01': oxiE16ManualPart01 as unknown as ManualPart,
 };
 
+// Build part registry for addac112-looper
+const ADDAC112_LOOPER_PARTS: Record<string, ManualPart> = {
+  '01': addac112LooperPart01 as unknown as ManualPart,
+  '02': addac112LooperPart02 as unknown as ManualPart,
+};
+
 export interface ManualRegistryEntry {
   manifest: ManualManifest;
   parts: Record<string, ManualPart>;
@@ -101,6 +114,10 @@ const MANUAL_REGISTRY: Record<string, ManualRegistryEntry> = {
   'oxi-e16-manual': {
     manifest: oxiE16ManualManifest as unknown as ManualManifest,
     parts: OXI_E16_MANUAL_PARTS,
+  },
+  'addac112-looper': {
+    manifest: addac112LooperManifest as unknown as ManualManifest,
+    parts: ADDAC112_LOOPER_PARTS,
   },
 };
 
