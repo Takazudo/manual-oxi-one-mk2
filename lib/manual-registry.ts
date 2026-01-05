@@ -22,6 +22,13 @@ import oxiOneMk2Part08 from '@/public/manuals/oxi-one-mk2/data/part-08.json';
 import oxiOneMk2Part09 from '@/public/manuals/oxi-one-mk2/data/part-09.json';
 import oxiOneMk2Part10 from '@/public/manuals/oxi-one-mk2/data/part-10.json';
 
+// Import oxi-coral manifest
+import oxiCoralManifest from '@/public/manuals/oxi-coral/data/manifest.json';
+
+// Import all oxi-coral parts
+import oxiCoralPart01 from '@/public/manuals/oxi-coral/data/part-01.json';
+import oxiCoralPart02 from '@/public/manuals/oxi-coral/data/part-02.json';
+
 // Build part registry for oxi-one-mk2
 const OXI_ONE_MK2_PARTS: Record<string, ManualPart> = {
   '01': oxiOneMk2Part01 as unknown as ManualPart,
@@ -34,6 +41,12 @@ const OXI_ONE_MK2_PARTS: Record<string, ManualPart> = {
   '08': oxiOneMk2Part08 as unknown as ManualPart,
   '09': oxiOneMk2Part09 as unknown as ManualPart,
   '10': oxiOneMk2Part10 as unknown as ManualPart,
+};
+
+// Build part registry for oxi-coral
+const OXI_CORAL_PARTS: Record<string, ManualPart> = {
+  '01': oxiCoralPart01 as unknown as ManualPart,
+  '02': oxiCoralPart02 as unknown as ManualPart,
 };
 
 export interface ManualRegistryEntry {
@@ -53,7 +66,10 @@ const MANUAL_REGISTRY: Record<string, ManualRegistryEntry> = {
     manifest: oxiOneMk2Manifest as unknown as ManualManifest,
     parts: OXI_ONE_MK2_PARTS,
   },
-  // Future manuals can be added here
+  'oxi-coral': {
+    manifest: oxiCoralManifest as unknown as ManualManifest,
+    parts: OXI_CORAL_PARTS,
+  },
 };
 
 /**
