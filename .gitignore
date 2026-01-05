@@ -88,8 +88,8 @@ package-lock.json
 yarn.lock
 
 # PDF Processing - Generated Files (Temporary/Intermediate)
-manual-pdf/pages/
-manual-pdf/parts/
+manual-pdf/*/pages/
+manual-pdf/*/parts/
 public/manuals/*/processing/
 
 # PDF Processing - Keep final output (commit to repo)
