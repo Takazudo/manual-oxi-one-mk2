@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import ctl from '@netlify/classnames-template-literals';
 import type { ManualPage } from '@/lib/types/manual';
@@ -65,9 +65,14 @@ interface PageViewerProps {
 export function PageViewer({ page, currentPage, totalPages, manualId }: PageViewerProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const isInitialMount = useRef(true);
 
-  // Reset loading and error state when page or manual changes
+  // Reset loading and error state when page or manual changes (skip initial mount)
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
     setIsLoading(true);
     setHasError(false);
   }, [currentPage, manualId]);
