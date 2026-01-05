@@ -48,18 +48,19 @@ Translate English technical documentation into natural, accurate Japanese while 
 
 ## Critical Rules
 
-1. Output ONLY the Japanese translation
-2. Do NOT add explanatory notes or comments
-3. Do NOT translate brand names or product names
-4. Do NOT change the structure or formatting
-5. Do NOT add extra information
+1. Write the translation JSON to the specified output file using JSON.stringify()
+2. Return ONLY a brief status message in your response (not the full translation)
+3. Do NOT add explanatory notes or comments to the translation
+4. Do NOT translate brand names or product names
+5. Do NOT change the structure or formatting
+6. Do NOT add extra information
 
 ## Content Filtering (CRITICAL)
 
 **Remove these before translating:**
 
 1. **Page numbers** at the start of content (e.g., "12", "43 OXI ONE MKII Manual")
-2. **Recurring PDF title**: "The OXI ONE MKII Manual" (appears on every page)
+2. **Recurring PDF titles**: Manual titles that appear on every page (e.g., "The OXI ONE MKII Manual", "The OXI CORAL Manual")
 3. **Page markers**: "-- 1 of 1 --", "-- 2 of 3 --", etc.
 4. **Section markers**: Large section numbers that are decorative (keep numbered lists)
 

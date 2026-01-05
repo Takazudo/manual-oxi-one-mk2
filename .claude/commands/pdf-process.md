@@ -24,7 +24,7 @@ Run the complete PDF processing pipeline automatically.
 
 ### During Execution:
 
-- ✅ **GOAL: Translate ALL 272 pages - continue until done or out of tokens**
+- ✅ **GOAL: Translate ALL pages for the specified manual - continue until done or out of tokens**
 - ✅ Follow the documented process exactly - word for word
 - ✅ Use ONLY the Task tool for translation (NOT MCP Codex)
 - ✅ Execute all steps to completion without stopping

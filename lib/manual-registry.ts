@@ -30,6 +30,8 @@ import oxiCoralPart01 from '@/public/manuals/oxi-coral/data/part-01.json';
 import oxiCoralPart02 from '@/public/manuals/oxi-coral/data/part-02.json';
 
 // Build part registry for oxi-one-mk2
+// Note: Double-cast needed because JSON imports infer pageRange as number[]
+// but our type requires [number, number] tuple
 const OXI_ONE_MK2_PARTS: Record<string, ManualPart> = {
   '01': oxiOneMk2Part01 as unknown as ManualPart,
   '02': oxiOneMk2Part02 as unknown as ManualPart,
@@ -85,20 +87,25 @@ export function getManifest(manualId: string): ManualManifest {
 
 /**
  * Get part data for a specific manual and part number
+ * @throws {Error} if manual ID or part number is not found
  */
-export function getPartData(manualId: string, partNum: string): ManualPart | null {
+export function getPartData(manualId: string, partNum: string): ManualPart {
   const entry = MANUAL_REGISTRY[manualId];
   if (!entry) {
-    return null;
+    throw new Error(`Manual not found: ${manualId}`);
   }
-  return entry.parts[partNum] || null;
+  const part = entry.parts[partNum];
+  if (!part) {
+    throw new Error(`Part ${partNum} not found for manual: ${manualId}`);
+  }
+  return part;
 }
 
 /**
- * Get list of all available manual IDs
+ * Get list of all available manual IDs (sorted alphabetically)
  */
 export function getAvailableManuals(): string[] {
-  return Object.keys(MANUAL_REGISTRY);
+  return Object.keys(MANUAL_REGISTRY).sort();
 }
 
 /**
