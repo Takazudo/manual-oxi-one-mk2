@@ -18,8 +18,11 @@ const headerStyles = ctl(`
 const titleStyles = ctl(`
   text-lg font-bold
   text-zd-white
-  hover:text-zd-primary
-  transition-colors
+  zd-invert-color-link
+  no-underline
+  px-[8px] py-[4px]
+  -mx-[8px] -my-[4px]
+  rounded-xs
 `);
 
 const navLinkStyles = ctl(`
@@ -60,14 +63,9 @@ export function Header() {
   return (
     <header className={headerStyles}>
       <Link href={titleHref} className={titleStyles}>
-        {title || 'Manual Viewer'}
+        {title || 'Manual Index'}
       </Link>
-      <a
-        href="https://takazudomodular.com"
-        target="_blank"
-        rel="noopener noreferrer"
-        className={navLinkStyles}
-      >
+      <a href="https://takazudomodular.com" className={navLinkStyles}>
         <span className={logoStyles} aria-hidden="true" />
         Takazudo Modular
       </a>
