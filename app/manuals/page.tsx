@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import ctl from '@netlify/classnames-template-literals';
-import { ArrowRight } from '@/components/svg';
 import { getAvailableManuals, getManifest } from '@/lib/manual-registry';
 import { getManualBasePath } from '@/lib/manual-config';
 
@@ -8,55 +7,29 @@ const containerStyles = ctl(`
   min-h-screen pt-[60px]
   bg-zd-gray1
   flex items-center justify-center
-  text-center
-`);
-
-const contentStyles = ctl(`
-  max-w-3xl mx-auto
-  p-hgap-lg
 `);
 
 const titleStyles = ctl(`
-  text-4xl font-bold mb-vgap-lg
+  text-2xl font-bold mb-vgap-md
   text-zd-white
+  font-futura
 `);
 
-const descriptionStyles = ctl(`
-  text-lg mb-vgap-xl
-  leading-relaxed
-  text-zd-gray7
+const listStyles = ctl(`
+  list-disc list-inside
+  text-lg
 `);
 
-const manualListStyles = ctl(`
-  flex flex-col gap-vgap-md
-  max-w-xl mx-auto
+const listItemStyles = ctl(`
+  mb-vgap-xs
 `);
 
-const manualCardStyles = ctl(`
-  bg-zd-gray2
-  border border-zd-gray4
-  rounded
-  p-hgap-lg
-  hover:bg-zd-gray3
-  hover:border-zd-primary
-  transition-all
-  text-left
-`);
-
-const manualTitleStyles = ctl(`
-  text-2xl font-bold mb-vgap-sm
+const linkStyles = ctl(`
   text-zd-white
-  flex items-center gap-hgap-sm
-`);
-
-const manualMetaStyles = ctl(`
-  text-sm text-zd-gray6
-  mb-vgap-md
-`);
-
-const manualDescriptionStyles = ctl(`
-  text-base text-zd-gray7
-  leading-relaxed
+  zd-invert-color-link
+  px-[4px] py-[2px]
+  -mx-[4px] -my-[2px]
+  rounded-xs
 `);
 
 export const metadata = {
@@ -69,36 +42,20 @@ export default function ManualsIndexPage() {
 
   return (
     <main className={containerStyles}>
-      <div className={contentStyles}>
-        <h1 className={titleStyles}>Available Manuals</h1>
-        <p className={descriptionStyles}>
-          AIによる自動翻訳で作成された日本語マニュアル一覧です。各マニュアルをクリックして閲覧できます。
-        </p>
-
-        <div className={manualListStyles}>
+      <div className="border border-debug">
+        <h1 className={titleStyles}>Manual Index</h1>
+        <ul className={listStyles}>
           {manualIds.map((manualId) => {
             const manifest = getManifest(manualId);
             return (
-              <Link key={manualId} href={getManualBasePath(manualId)} className={manualCardStyles}>
-                <h2 className={manualTitleStyles}>
-                  <span>{manifest.title}</span>
-                  <span className="ml-auto">
-                    <ArrowRight
-                      aria-hidden="true"
-                      className="w-[20px] inline-block text-zd-primary"
-                    />
-                  </span>
-                </h2>
-                <div className={manualMetaStyles}>
-                  {manifest.totalPages} pages • Japanese Translation
-                </div>
-                <p className={manualDescriptionStyles}>
-                  AIによる自動翻訳で作成された日本語マニュアルです。キーボードの矢印キーでページ移動が可能です。
-                </p>
-              </Link>
+              <li key={manualId} className={listItemStyles}>
+                <Link href={getManualBasePath(manualId)} className={linkStyles}>
+                  {manifest.title}
+                </Link>
+              </li>
             );
           })}
-        </div>
+        </ul>
       </div>
     </main>
   );
