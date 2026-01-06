@@ -3,13 +3,18 @@ import ctl from '@netlify/classnames-template-literals';
 import { getAvailableManuals, getManifest } from '@/lib/manual-registry';
 import { getManualBasePath } from '@/lib/manual-config';
 
-const containerStyles = ctl(`
+export const metadata = {
+  title: 'Manual Index | Takazudo Modular',
+  description: 'Browse all available translated manuals',
+};
+
+const pageStyles = ctl(`
   min-h-screen pt-[60px]
   bg-zd-gray1
   flex items-center justify-center
 `);
 
-const titleStyles = ctl(`
+const headingStyles = ctl(`
   text-2xl font-bold mb-vgap-md
   text-zd-white
   font-futura
@@ -27,23 +32,19 @@ const listItemStyles = ctl(`
 const linkStyles = ctl(`
   text-zd-white
   zd-invert-color-link
+  no-underline
   px-[4px] py-[2px]
   -mx-[4px] -my-[2px]
   rounded-xs
 `);
 
-export const metadata = {
-  title: 'Manual Index | Takazudo Modular',
-  description: 'Browse all available translated manuals',
-};
-
 export default function ManualsIndexPage() {
   const manualIds = getAvailableManuals();
 
   return (
-    <main className={containerStyles}>
+    <main className={pageStyles}>
       <div>
-        <h1 className={titleStyles}>Manual Index</h1>
+        <h1 className={headingStyles}>Manual Index</h1>
         <ul className={listStyles}>
           {manualIds.map((manualId) => {
             const manifest = getManifest(manualId);

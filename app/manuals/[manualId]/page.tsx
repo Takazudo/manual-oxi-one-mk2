@@ -1,32 +1,69 @@
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
 import ctl from '@netlify/classnames-template-literals';
-import { ArrowRight } from '@/components/svg';
+import { ArrowLink } from '@/components/arrow-link';
 import { getPagePath } from '@/lib/manual-config';
 import { isValidManual, getAvailableManuals, getManifest } from '@/lib/manual-registry';
 
-const containerStyles = ctl(`
+interface ManualLandingPageParams {
+  manualId: string;
+}
+
+interface ManualLandingPageProps {
+  params: Promise<ManualLandingPageParams>;
+}
+
+export async function generateStaticParams() {
+  const manuals = getAvailableManuals();
+  return manuals.map((manualId) => ({ manualId }));
+}
+
+export async function generateMetadata({ params }: ManualLandingPageProps) {
+  const { manualId } = await params;
+
+  if (!isValidManual(manualId)) {
+    return { title: 'Manual Not Found' };
+  }
+
+  const manifest = getManifest(manualId);
+  return {
+    title: `${manifest.title} 日本語訳 | Takazudo Modular`,
+    description: `Takazudo Modularによる${manifest.title}の日本語訳マニュアル`,
+  };
+}
+
+const pageStyles = ctl(`
   min-h-screen pt-[60px]
   bg-zd-gray1
   flex items-center justify-center
 `);
 
-const contentStyles = ctl(`
-  text-left
+const headingStyles = ctl(`
+  pb-vgap-lg
+  font-futura
 `);
 
-const descriptionStyles = ctl(`
+const brandStyles = ctl(`
+  block text-4xl pb-vgap-sm
+`);
+
+const titleStyles = ctl(`
+  block text-5xl
+`);
+
+const subtitleStyles = ctl(`
+  block text-3xl pt-vgap-sm
+`);
+
+const navStyles = ctl(`
+  flex flex-col gap-vgap-sm
+`);
+
+const footerStyles = ctl(`
   text-lg pt-vgap-md
   leading-relaxed
   font-futura
   border-t border-zd-white
   mt-vgap-lg
-`);
-
-const linkStyles = ctl(`
-  inline-flex items-center
-  text-xl
-  zd-invert-color-link
 `);
 
 const codeStyles = ctl(`
@@ -36,44 +73,9 @@ const codeStyles = ctl(`
   border border-zd-white
 `);
 
-interface ManualIndexPageParams {
-  manualId: string;
-}
+export default async function ManualLandingPage({ params }: ManualLandingPageProps) {
+  const { manualId } = await params;
 
-interface ManualIndexPageProps {
-  params: Promise<ManualIndexPageParams>;
-}
-
-export async function generateStaticParams() {
-  const manuals = getAvailableManuals();
-  return manuals.map((manualId) => ({
-    manualId,
-  }));
-}
-
-export async function generateMetadata({ params }: ManualIndexPageProps) {
-  const resolvedParams = await params;
-  const { manualId } = resolvedParams;
-
-  if (!isValidManual(manualId)) {
-    return {
-      title: 'Manual Not Found',
-    };
-  }
-
-  const manifest = getManifest(manualId);
-
-  return {
-    title: `${manifest.title} 日本語訳`,
-    description: `Takazudo Modularによる${manifest.title}の日本語訳マニュアル`,
-  };
-}
-
-export default async function ManualIndexPage({ params }: ManualIndexPageProps) {
-  const resolvedParams = await params;
-  const { manualId } = resolvedParams;
-
-  // Validate manual ID
   if (!isValidManual(manualId)) {
     notFound();
   }
@@ -81,42 +83,22 @@ export default async function ManualIndexPage({ params }: ManualIndexPageProps) 
   const manifest = getManifest(manualId);
 
   return (
-    <main className={containerStyles}>
-      <div className={contentStyles}>
-        <h1 className="pb-vgap-lg font-futura">
-          <span className="block text-4xl pb-vgap-sm">{manifest.brand}:</span>
-          <span className="block text-5xl">{manifest.title}</span>
-          <span className="block text-3xl pt-vgap-sm">Japanese Translation（日本語訳）</span>
+    <main className={pageStyles}>
+      <div>
+        <h1 className={headingStyles}>
+          <span className={brandStyles}>{manifest.brand}:</span>
+          <span className={titleStyles}>{manifest.title}</span>
+          <span className={subtitleStyles}>Japanese Translation（日本語訳）</span>
         </h1>
-        <div>
-          <Link href={getPagePath(manualId, 1)} className={linkStyles}>
-            <span className="pr-[7px]">
-              <ArrowRight
-                aria-hidden="true"
-                className="w-[18px] md:w-[24px] align-middle inline-block"
-              />
-            </span>
-            <span>日本語訳マニュアルを読む</span>
-          </Link>
-        </div>
-        <div className="pt-vgap-sm">
-          <a
-            href={`/manuals/${manualId}/original.pdf`}
-            className={linkStyles}
-            target="_blank"
-            rel="noopener"
-          >
-            <span className="pr-[7px]">
-              <ArrowRight
-                aria-hidden="true"
-                className="w-[18px] md:w-[24px] align-middle inline-block"
-              />
-            </span>
-            <span>英語版オリジナル（PDF）</span>
-          </a>
-        </div>
 
-        <p className={descriptionStyles}>
+        <nav className={navStyles}>
+          <ArrowLink href={getPagePath(manualId, 1)}>日本語訳マニュアルを読む</ArrowLink>
+          <ArrowLink href={`/manuals/${manualId}/original.pdf`} external>
+            英語版オリジナル（PDF）
+          </ArrowLink>
+        </nav>
+
+        <p className={footerStyles}>
           Navigation: <code className={codeStyles}>←</code> <code className={codeStyles}>→</code>{' '}
           key
         </p>
