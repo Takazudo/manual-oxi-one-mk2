@@ -84,7 +84,7 @@ export default async function ManualIndexPage({ params }: ManualIndexPageProps) 
     <main className={containerStyles}>
       <div className={contentStyles}>
         <h1 className="pb-vgap-lg font-futura">
-          <span className="block text-4xl pb-vgap-sm">ADDAC System:</span>
+          <span className="block text-4xl pb-vgap-sm">{manifest.brand}:</span>
           <span className="block text-5xl">{manifest.title}</span>
           <span className="block text-3xl pt-vgap-sm">Japanese Translation（日本語訳）</span>
         </h1>
@@ -100,15 +100,20 @@ export default async function ManualIndexPage({ params }: ManualIndexPageProps) 
           </Link>
         </div>
         <div className="pt-vgap-sm">
-          <Link href={getPagePath(manualId, 1)} className={linkStyles}>
+          <a
+            href={`/manuals/${manualId}/original.pdf`}
+            className={linkStyles}
+            target="_blank"
+            rel="noopener"
+          >
             <span className="pr-[7px]">
               <ArrowRight
                 aria-hidden="true"
                 className="w-[18px] md:w-[24px] align-middle inline-block"
               />
             </span>
-            <span>英語版オリジナル</span>
-          </Link>
+            <span>英語版オリジナル（PDF）</span>
+          </a>
         </div>
 
         <p className={descriptionStyles}>
