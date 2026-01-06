@@ -13,6 +13,9 @@ import type { ManualManifest } from './types/manual';
 // Import only manifests (small JSON files)
 import oxiOneMk2Manifest from '@/public/manuals/oxi-one-mk2/data/manifest.json';
 import oxiCoralManifest from '@/public/manuals/oxi-coral/data/manifest.json';
+import oxiE16QuickStartManifest from '@/public/manuals/oxi-e16-quick-start/data/manifest.json';
+import oxiE16ManualManifest from '@/public/manuals/oxi-e16-manual/data/manifest.json';
+import addac112LooperManifest from '@/public/manuals/addac112-looper/data/manifest.json';
 
 /**
  * Lightweight registry of manual manifests only
@@ -22,6 +25,9 @@ import oxiCoralManifest from '@/public/manuals/oxi-coral/data/manifest.json';
 const MANIFEST_REGISTRY: Record<string, ManualManifest> = {
   'oxi-one-mk2': oxiOneMk2Manifest as unknown as ManualManifest,
   'oxi-coral': oxiCoralManifest as unknown as ManualManifest,
+  'oxi-e16-quick-start': oxiE16QuickStartManifest as unknown as ManualManifest,
+  'oxi-e16-manual': oxiE16ManualManifest as unknown as ManualManifest,
+  'addac112-looper': addac112LooperManifest as unknown as ManualManifest,
 };
 
 /**
@@ -48,4 +54,13 @@ export function getManifest(manualId: string): ManualManifest {
  */
 export function isValidManual(manualId: string): boolean {
   return manualId in MANIFEST_REGISTRY;
+}
+
+/**
+ * Get manual title by ID (lightweight - only loads manifest)
+ * Returns undefined if manual not found
+ */
+export function getManualTitle(manualId: string): string | undefined {
+  const manifest = MANIFEST_REGISTRY[manualId];
+  return manifest?.title;
 }

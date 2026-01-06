@@ -34,7 +34,7 @@ export function ArrowLink({ href, children, external }: ArrowLinkProps) {
   if (external) {
     return (
       <span className="inline-block">
-        <a href={href} className={linkStyles} target="_blank" rel="noopener">
+        <a href={href} className={linkStyles} target="_blank" rel="noopener noreferrer">
           {content}
         </a>
       </span>

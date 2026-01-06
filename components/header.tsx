@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import ctl from '@netlify/classnames-template-literals';
-import { getManualTitle } from '@/lib/manual-registry';
+import { getManualTitle } from '@/lib/manual-manifest-registry';
 
 const headerStyles = ctl(`
   fixed top-0 left-0 right-0 z-50
@@ -65,7 +65,12 @@ export function Header() {
       <Link href={titleHref} className={titleStyles}>
         {title || 'Manual Index'}
       </Link>
-      <a href="https://takazudomodular.com" className={navLinkStyles}>
+      <a
+        href="https://takazudomodular.com"
+        className={navLinkStyles}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <span className={logoStyles} aria-hidden="true" />
         Takazudo Modular
       </a>
