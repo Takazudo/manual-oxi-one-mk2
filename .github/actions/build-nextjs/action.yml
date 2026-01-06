@@ -71,10 +71,11 @@ runs:
         HTML_COUNT=$(find out -name "*.html" | wc -l)
         echo "📄 HTML files: $HTML_COUNT"
 
-        if [ -d "out/_next" ]; then
-          echo "✅ Next.js static assets found"
+        # With basePath: '/manuals', assets are under out/manuals/_next/
+        if [ -d "out/manuals/_next" ]; then
+          echo "✅ Next.js static assets found (under manuals/)"
         else
-          echo "❌ Error: _next/ directory not found"
+          echo "❌ Error: manuals/_next/ directory not found"
           exit 1
         fi
 
