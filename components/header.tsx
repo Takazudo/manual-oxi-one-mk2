@@ -20,12 +20,13 @@ const titleStyles = ctl(`
 
 const navLinkStyles = ctl(`
   text-sm
-  text-zd-gray6
-  hover:text-zd-white
-  transition-colors
-  flex items-center gap-hgap-xs
+  text-zd-white
+  zd-invert-color-link
   no-underline
-  hover:underline
+  flex items-center gap-hgap-xs
+  px-[8px] py-[4px]
+  -mx-[8px] -my-[4px]
+  rounded-xs
 `);
 
 const logoStyles = ctl(`
