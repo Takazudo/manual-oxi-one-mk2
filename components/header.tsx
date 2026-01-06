@@ -23,7 +23,18 @@ const navLinkStyles = ctl(`
   text-zd-gray6
   hover:text-zd-white
   transition-colors
-  underline
+  flex items-center gap-hgap-xs
+  no-underline
+  hover:underline
+`);
+
+const logoStyles = ctl(`
+  w-[1.2em] h-[1.2em]
+  bg-current
+  [mask-image:url('/img/takazudo-logo.svg')]
+  [mask-size:contain]
+  [mask-repeat:no-repeat]
+  [mask-position:center]
 `);
 
 export function Header() {
@@ -38,6 +49,7 @@ export function Header() {
         rel="noopener noreferrer"
         className={navLinkStyles}
       >
+        <span className={logoStyles} aria-hidden="true" />
         Takazudo Modular
       </a>
     </header>
